@@ -1,0 +1,107 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: rgb(206, 206, 206);
+}
+
+.containerBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.containerBlockTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 128px;
+  padding: 13px 0;
+  gap: 20px;
+  max-width: 1300px;
+}
+
+.containerBlockTopLeft {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.containerBlockTopLeft img {
+  width: 73px;
+  height: 73px;
+}
+
+.containerBlockTopLeft span {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  width: 280px;
+}
+
+.containerBlockTopRight {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.containerBlockTopRight span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 53px;
+  height: 53px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.containerBlockTopRight span img:nth-of-type(1) {
+  width: 32px;
+  height: 28px;
+}
+
+.containerBlockTopRight span img:nth-of-type(2) {
+  width: 37px;
+  height: 18px;
+}
+
+.containerBlockTopRight span img:nth-of-type(3) {
+  width: 27px;
+  height: 27px;
+}
+
+.containerBlockCenter {
+  width: 100%;
+  border-top: 1px solid #fff;
+}
+
+.containerBlockBottom {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1300px;
+}
+
+.containerBlockBottom ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 78px;
+  list-style: none;
+  gap: 10px;
+}
+
+.containerBlockBottom ul a {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+}
