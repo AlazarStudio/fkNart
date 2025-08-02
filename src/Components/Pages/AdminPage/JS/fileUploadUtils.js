@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
-import uploadsConfig from '../../../uploadsConfig';
-import serverConfig from '../../../serverConfig';
+import uploadsConfig from '../../../../uploadsConfig';
+import serverConfig from '../../../../serverConfig';
 
 const token = Cookies.get('token');
 
@@ -112,9 +112,10 @@ export const updateImages = async (existingImages = [], newFiles = []) => {
 // };
 
 export const handleSaveWithImages = async (data) => {
-  const upload = async (images) => {
+  const upload = async (files) => {
+    if (!files || files.length === 0) return [];
     const formData = new FormData();
-    images.forEach((file) => formData.append('files', file.rawFile));
+    files.forEach((file) => formData.append('files', file.rawFile));
     const res = await fetch(`${serverConfig}/upload`, {
       method: 'POST',
       body: formData,
@@ -123,16 +124,23 @@ export const handleSaveWithImages = async (data) => {
     return json.filePaths;
   };
 
-  const newImages = data.imagesRaw || [];
+  // новые
+  const uploadedImages = await upload(data.imagesRaw || []);
+  const uploadedLogo = await upload(data.logoRaw || []);
+
+  // старые
   const oldImages = Array.isArray(data.images)
     ? data.images.filter((img) => typeof img === 'string')
     : [];
-
-  const uploaded = newImages.length ? await upload(newImages) : [];
+  const oldLogo = Array.isArray(data.logo)
+    ? data.logo.filter((img) => typeof img === 'string')
+    : [];
 
   return {
     ...data,
-    images: [...oldImages, ...uploaded],
+    images: [...oldImages, ...uploadedImages],
+    logo: [...oldLogo, ...uploadedLogo],
     imagesRaw: undefined,
+    logoRaw: undefined,
   };
 };

@@ -4,27 +4,42 @@ import simpleRestProvider from 'ra-data-simple-rest';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
 import russianMessages from 'ra-language-russian';
 
-// import LoginPage from './LoginPage1';
 import serverConfig from '../../../serverConfig';
 import authProvider from './JS/authProvider';
 import { fetchJsonWithToken } from './JS/fetchJsonWithToken';
 
-// import authProvider from './JS/authProvider';
-// import LoginPage from './LoginPage';
-// import {
-//   CategoryCreate,
-//   CategoryEdit,
-//   CategoryList,
-// } from './Resourses/CategoryResource';
-// import {
-//   ProjectCreate,
-//   ProjectEdit,
-//   ProjectList,
-// } from './Resourses/ProjectResource';
+import LoginPage from './LoginPage';
 import CustomLayout from './CustomLayout';
-// import { AiList, AiCreate, AiEdit } from './Resourses/AiResource';
 
-const dataProvider = simpleRestProvider(`${serverConfig}`, fetchJsonWithToken); // Ваш API
+import {
+  LeagueCreate,
+  LeagueEdit,
+  LeagueList,
+} from './Resourses/LeagueResource';
+import {
+  LeagueStandingCreate,
+  LeagueStandingEdit,
+  LeagueStandingList,
+} from './Resourses/LeagueStandingResource';
+import { TeamCreate, TeamEdit, TeamList } from './Resourses/TeamResource';
+import {
+  PlayerCreate,
+  PlayerEdit,
+  PlayerList,
+} from './Resourses/PlayerResource';
+import { MatchCreate, MatchEdit, MatchList } from './Resourses/MatchResource';
+import {
+  MatchEventCreate,
+  MatchEventEdit,
+  MatchEventList,
+} from './Resourses/MatchEventResource';
+import {
+  PlayerStatCreate,
+  PlayerStatEdit,
+  PlayerStatList,
+} from './Resourses/PlayerStatResource';
+
+const dataProvider = simpleRestProvider(`${serverConfig}`, fetchJsonWithToken);
 const i18nProvider = polyglotI18nProvider(() => russianMessages, 'ru');
 
 const AdminPage = () => (
@@ -32,24 +47,59 @@ const AdminPage = () => (
     basename="/admin"
     dataProvider={dataProvider}
     i18nProvider={i18nProvider}
-    // authProvider={authProvider}
+    authProvider={authProvider}
     layout={CustomLayout}
-    // loginPage={<LoginPage />}
+    loginPage={<LoginPage />}
   >
-    {/* <Resource
-      name="categories"
-      list={CategoryList}
-      edit={CategoryEdit}
-      create={CategoryCreate}
-    /> */}
-    {/* <Resource name="ais" list={AiList} edit={AiEdit} create={AiCreate} /> */}
-    {/* 
     <Resource
-      name="projects"
-      list={ProjectList}
-      edit={ProjectEdit}
-      create={ProjectCreate}
-    /> */}
+      name="leagues"
+      options={{ label: 'Лиги' }}
+      list={LeagueList}
+      create={LeagueCreate}
+      edit={LeagueEdit}
+    />
+    <Resource
+      name="leagueStandings"
+      options={{ label: 'Турнирная таблица' }}
+      list={LeagueStandingList}
+      edit={LeagueStandingEdit}
+      create={LeagueStandingCreate}
+    />
+    <Resource
+      name="teams"
+      options={{ label: 'Команды' }}
+      list={TeamList}
+      create={TeamCreate}
+      edit={TeamEdit}
+    />
+    <Resource
+      name="players"
+      options={{ label: 'Игроки' }}
+      list={PlayerList}
+      create={PlayerCreate}
+      edit={PlayerEdit}
+    />
+    <Resource
+      name="matches"
+      options={{ label: 'Матчи' }}
+      list={MatchList}
+      create={MatchCreate}
+      edit={MatchEdit}
+    />
+    <Resource
+      name="matchEvents"
+      options={{ label: 'События матча' }}
+      list={MatchEventList}
+      create={MatchEventCreate}
+      edit={MatchEventEdit}
+    />
+    <Resource
+      name="playerStats"
+      options={{ label: 'Статистика игроков' }}
+      list={PlayerStatList}
+      create={PlayerStatCreate}
+      edit={PlayerStatEdit}
+    />
   </Admin>
 );
 

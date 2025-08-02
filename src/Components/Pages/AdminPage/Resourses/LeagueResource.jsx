@@ -5,69 +5,44 @@ import {
   TextField,
   EditButton,
   DeleteButton,
-  ImageInput,
-  ImageField,
-  DateField,
-  DateInput,
   Create,
   Edit,
   SimpleForm,
   TextInput,
-  ReferenceInput,
-  SelectInput,
-  ReferenceField,
+  ImageInput,
+  ImageField,
   FunctionField,
-  BooleanField,
-  BooleanInput,
 } from 'react-admin';
-import { handleSave, uploadFile, uploadFiles } from '../JS/fileUploadUtils';
 import { handleSaveWithImages } from '../JS/fileUploadUtils';
-import uploadsConfig from '../../../uploadsConfig';
-import RichTextInput from '../Auth/RichTextInput';
+import uploadsConfig from '../../../../uploadsConfig';
 
-// Список проектов
-export const ProjectList = (props) => (
+// ✅ Список лиг
+export const LeagueList = (props) => (
   <List {...props}>
     <Datagrid rowClick="edit">
       <TextField source="id" label="ID" />
       <TextField source="title" label="Название" />
-      <TextField source="description" label="Описание" />
-      <ReferenceField
-        source="categoryId"
-        reference="categories"
-        label="Категория"
-      >
-        <TextField source="title" />
-      </ReferenceField>
-
+      <TextField source="season" label="Сезон" />
+      <TextField source="city" label="Город" />
       <FunctionField
         label="Изображения"
         render={(record) =>
-          record.images && record.images.length ? record.images.join(', ') : '—'
+          record.images?.length
         }
       />
-      <BooleanField source="favorite" label="Избранное" />
-
       <EditButton />
       <DeleteButton />
     </Datagrid>
   </List>
 );
 
-// Создание проекта
-export const ProjectCreate = (props) => (
+// ✅ Создание лиги
+export const LeagueCreate = (props) => (
   <Create {...props} transform={handleSaveWithImages}>
     <SimpleForm>
       <TextInput source="title" label="Название" fullWidth />
-      <TextInput source="description" label="Описание" />
-      <BooleanInput source="favorite" label="Избранное" />
-      <ReferenceInput
-        source="categoryId"
-        reference="categories"
-        label="Категория"
-      >
-        <SelectInput optionText="title" />
-      </ReferenceInput>
+      <TextInput source="season" label="Сезон" />
+      <TextInput source="city" label="Город" />
 
       <ImageInput
         source="imagesRaw"
@@ -81,20 +56,13 @@ export const ProjectCreate = (props) => (
   </Create>
 );
 
-// Редактирование проекта
-export const ProjectEdit = (props) => (
+// ✅ Редактирование лиги
+export const LeagueEdit = (props) => (
   <Edit {...props} transform={handleSaveWithImages}>
     <SimpleForm>
       <TextInput source="title" label="Название" fullWidth />
-      <TextInput source="description" label="Описание" />
-      <BooleanInput source="favorite" label="Избранное" />
-      <ReferenceInput
-        source="categoryId"
-        reference="categories"
-        label="Категория"
-      >
-        <SelectInput optionText="title" />
-      </ReferenceInput>
+      <TextInput source="season" label="Сезон" />
+      <TextInput source="city" label="Город" />
 
       <ImageInput
         source="imagesRaw"
@@ -111,7 +79,7 @@ export const ProjectEdit = (props) => (
         multiple
         accept="image/*"
         format={(value) =>
-          value && value.length
+          value?.length
             ? value.map((src) => ({
                 src: src.startsWith('http') ? src : `${uploadsConfig}${src}`,
                 title: src,
@@ -120,9 +88,7 @@ export const ProjectEdit = (props) => (
         }
         parse={(value) =>
           value.map((file) =>
-            file.rawFile
-              ? file.rawFile
-              : file.src.replace(`${uploadsConfig}`, '')
+            file.rawFile ? file.rawFile : file.src.replace(uploadsConfig, '')
           )
         }
       >
