@@ -24,7 +24,7 @@ import uploadsConfig from '../../../../uploadsConfig';
 // 📌 Список матчей
 const statusMap = {
   SCHEDULED: 'Запланирован',
-  LIVE: 'Идёт',
+  // LIVE: 'Идёт',
   FINISHED: 'Завершён',
 };
 

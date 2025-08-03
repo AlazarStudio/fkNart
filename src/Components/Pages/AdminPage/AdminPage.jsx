@@ -38,6 +38,7 @@ import {
   PlayerStatEdit,
   PlayerStatList,
 } from './Resourses/PlayerStatResource';
+import { NewsCreate, NewsEdit, NewsList } from './Resourses/NewsResource';
 
 const dataProvider = simpleRestProvider(`${serverConfig}`, fetchJsonWithToken);
 const i18nProvider = polyglotI18nProvider(() => russianMessages, 'ru');
@@ -99,6 +100,13 @@ const AdminPage = () => (
       list={PlayerStatList}
       create={PlayerStatCreate}
       edit={PlayerStatEdit}
+    />
+    <Resource
+      name="news"
+      options={{ label: 'Новости' }}
+      list={NewsList}
+      create={NewsCreate}
+      edit={NewsEdit}
     />
   </Admin>
 );

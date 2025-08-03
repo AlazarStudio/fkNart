@@ -20,6 +20,11 @@
   border-radius: 20px;
   border: none;
   padding: 35px 25px;
+  gap: 22px;
+}
+
+.containerBlockTitle {
+  display: none;
 }
 
 .containerBlockLeft {
@@ -80,6 +85,12 @@
   color: #fff;
 }
 
+.activeTab {
+  background-color: #007031 !important;
+  color: #fff;
+  border-radius: 10px;
+}
+
 .containerBlockLeftButtonsControl {
   display: flex;
   align-items: center;
@@ -107,5 +118,339 @@
   height: 61px;
 }
 
+.containerBlockRight {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.slider {
+  display: flex;
+  gap: 22px;
+  transition: transform 0.5s ease-in-out; /* плавный сдвиг */
+  width: 100%;
+  height: 100%;
+}
+
+.matchCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 32%;
+  height: 100%;
+  border: 1px solid #c5c6c6;
+  border-radius: 15px;
+  padding: 15px 10px;
+  flex: 0 0 calc(100% / 3 - 20px); /* 3 карточки на экране */
+  transition: all 0.3s ease-in-out;
+}
+
+.matchDate {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.matchStadium {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #b9b9b9;
+  gap: 12px;
+  height: 18px;
+}
+
+.matchStadium img {
+  height: 18px;
+  object-fit: cover;
+}
+
+.matchScore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-size: 41px;
+  font-weight: 700;
+  gap: 18px;
+}
+
+.matchScore span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  white-space: nowrap; /* 🔑 запрет переноса */
+}
+
+.matchScore img {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #c5c6c6;
+  border-radius: 5px;
+}
+
+.matchLeague {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.matchRound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #c5c6c6;
+}
+
 @media (max-width: 768px) {
+  .container {
+    height: 680px;
+  }
+
+  .containerBlock {
+    flex-direction: column;
+    background-color: inherit;
+    height: 100%;
+    margin-top: 100px;
+    border-radius: 0;
+    padding: 23px 25px;
+  }
+
+  .containerBlockTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    width: 250px;
+  }
+
+  .title {
+    text-align: center;
+  }
+
+  .containerBlockTopRight {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .containerBlockTopRight span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #fff;
+  }
+
+  .containerBlockTopRight span img:nth-of-type(1) {
+    width: 20px;
+    height: 18px;
+  }
+
+  .containerBlockTopRight span img:nth-of-type(2) {
+    width: 24px;
+    height: 11px;
+  }
+
+  .containerBlockTopRight span img:nth-of-type(3) {
+    width: 11px;
+    height: 10px;
+  }
+
+  .containerBlockLeft {
+    max-width: 1000px;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 21px 8px;
+    height: 150px;
+  }
+
+  .containerBlockLeft span {
+    max-width: 100%;
+  }
+
+  .containerBlockLeft span img {
+  }
+
+  .containerBlockLeftButtons {
+    display: flex;
+    align-items: center;
+    margin-top: 19px;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+    max-width: 710px;
+    padding: 0 15px;
+  }
+
+  .containerBlockLeftButtons button {
+  }
+
+  .containerBlockLeftButtons button:hover {
+  }
+
+  .activeTab {
+  }
+
+  .containerBlockLeftButtonsControl {
+    display: none;
+  }
+
+  .containerBlockLeftButtonsControl span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .containerBlockLeftButtonsControl span img {
+    width: 61px;
+    height: 61px;
+  }
+
+  .containerBlockRight {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .slider {
+    display: flex;
+    gap: 0;
+    transition: transform 0.5s ease-in-out; /* плавный сдвиг */
+    width: 100%;
+    height: 100%;
+  }
+
+  .matchCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 250px;
+    border: none;
+    background-color: #fff;
+    border-radius: 15px;
+    margin: 0 10px;
+    padding: 15px 10px;
+    flex: 0 0 calc(100% - 20px); /* 3 карточки на экране */
+    transition: all 0.3s ease-in-out;
+  }
+
+  .dots {
+    position: absolute;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    z-index: 111;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    background: #c5c5c5b2;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+  }
+
+  .activeDot {
+    width: 11px;
+    height: 11px;
+    background: #fff;
+  }
+
+  .matchDate {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .matchStadium {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #b9b9b9;
+    gap: 12px;
+    height: 18px;
+  }
+
+  .matchStadium img {
+    height: 18px;
+    object-fit: cover;
+  }
+
+  .matchScore {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-size: 41px;
+    font-weight: 700;
+    gap: 18px;
+  }
+
+  .matchScore span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    white-space: nowrap; /* 🔑 запрет переноса */
+  }
+
+  .matchScore img {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #c5c6c6;
+    border-radius: 5px;
+  }
+
+  .matchLeague {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .matchRound {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #c5c6c6;
+  }
 }
