@@ -11,16 +11,19 @@ export default function Container2() {
   const [news, setNews] = useState([]);
   const [standings, setStandings] = useState([]);
   const [leagues, setLeagues] = useState([]);
+  const [matches, setMatches] = useState([]);
   const [selectedLeague, setSelectedLeague] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [newsRes, standingsRes, leaguesRes] = await Promise.all([
-          axios.get(`${serverConfig}/news`),
-          axios.get(`${serverConfig}/leagueStandings`),
-          axios.get(`${serverConfig}/leagues`),
-        ]);
+        const [newsRes, standingsRes, leaguesRes, matchesRes] =
+          await Promise.all([
+            axios.get(`${serverConfig}/news`),
+            axios.get(`${serverConfig}/leagueStandings`),
+            axios.get(`${serverConfig}/leagues`),
+            axios.get(`${serverConfig}/matches`),
+          ]);
 
         const sortedNews = [...newsRes.data].sort(
           (a, b) => new Date(b.date) - new Date(a.date)
@@ -29,6 +32,7 @@ export default function Container2() {
         setNews(sortedNews.slice(0, 6));
         setStandings(standingsRes.data);
         setLeagues(leaguesRes.data);
+        setMatches(matchesRes.data);
         if (leaguesRes.data.length > 0) {
           setSelectedLeague(leaguesRes.data[0].id); // ✅ первая лига по умолчанию
         }
@@ -39,6 +43,16 @@ export default function Container2() {
 
     fetchData();
   }, []);
+
+  const finishedMatches = matches
+    .filter(
+      (m) =>
+        m.status === 'FINISHED' &&
+        m.league?.id === selectedLeague &&
+        m.homeTeam &&
+        m.guestTeam
+    )
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const filteredStandings = standings
     .filter((row) => !selectedLeague || row.league_id === selectedLeague)
@@ -115,6 +129,9 @@ export default function Container2() {
                   <span className={classes.points}>{row.points}</span>
                 </div>
               ))}
+              <button onClick={() => navigate('/tournamentTable')}>
+                ПОСМОТРЕТЬ ВСЮ ТАБЛИЦУ
+              </button>
             </div>
           </div>
 
@@ -122,6 +139,36 @@ export default function Container2() {
             <span className={classes.containerBlockRightBottomTitle}>
               РЕЗУЛЬТАТЫ
             </span>
+
+            <div className={classes.resultsTable}>
+              {finishedMatches.slice(0, 6).map((match) => {
+                const date = new Date(match.date);
+                const formattedDate = date.toLocaleDateString('ru-RU', {
+                  day: '2-digit',
+                  month: '2-digit',
+                });
+                const formattedTime = date.toLocaleTimeString('ru-RU', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                });
+
+                return (
+                  <div key={match.id} className={classes.resultsRow}>
+                    <span className={classes.date}>
+                      <div>{formattedDate}</div>
+                    </span>
+                    <span>{match.homeTeam.title}</span>
+                    <span>
+                      {match.homeScore} : {match.guestScore}
+                    </span>
+                    <span>{match.guestTeam.title}</span>
+                  </div>
+                );
+              })}
+              <button onClick={() => navigate('/matchCalendar')}>
+                ВСЕ РЕЗУЛЬТАТЫ
+              </button>
+            </div>
           </div>
         </div>
       </div>

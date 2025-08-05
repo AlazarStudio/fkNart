@@ -18,7 +18,10 @@ import {
   ImageField,
   FunctionField,
 } from 'react-admin';
-import { handleSaveWithImages } from '../JS/fileUploadUtils';
+import {
+  // handleSaveWithImages,
+  handleSaveWithImagesAndVideos,
+} from '../JS/fileUploadUtils';
 import uploadsConfig from '../../../../uploadsConfig';
 
 // 📌 Список матчей
@@ -74,38 +77,35 @@ const statusChoices = [
 
 // 📌 Создание матча
 export const MatchCreate = (props) => (
-  <Create {...props} transform={handleSaveWithImages}>
+  <Create {...props} transform={handleSaveWithImagesAndVideos}>
     <SimpleForm>
       <ReferenceInput source="leagueId" reference="leagues" label="Лига">
-        <TextInput source="stadium" label="Стадион" fullWidth />
-        <DateTimeInput source="date" label="Дата" />
-
-        <SelectInput
-          source="status"
-          label="Статус"
-          choices={statusChoices}
-          optionText="name"
-          optionValue="id"
-          defaultValue="SCHEDULED"
-        />
-
-        <ReferenceInput source="homeTeamId" reference="teams" label="Команда 1">
-          <SelectInput optionText="title" />
-        </ReferenceInput>
-
-        <ReferenceInput
-          source="guestTeamId"
-          reference="teams"
-          label="Команда 2"
-        >
-          <SelectInput optionText="title" />
-        </ReferenceInput>
-        <NumberInput source="homeScore" label="Счёт (Команда 1)" />
-        <NumberInput source="guestScore" label="Счёт (Команда 2)" />
-        <NumberInput source="round" label="Раунд" />
-
         <SelectInput optionText="title" />
       </ReferenceInput>
+
+      <TextInput source="stadium" label="Стадион" fullWidth />
+      <DateTimeInput source="date" label="Дата" />
+
+      <SelectInput
+        source="status"
+        label="Статус"
+        choices={statusChoices}
+        optionText="name"
+        optionValue="id"
+        defaultValue="SCHEDULED"
+      />
+
+      <ReferenceInput source="homeTeamId" reference="teams" label="Команда 1">
+        <SelectInput optionText="title" />
+      </ReferenceInput>
+
+      <ReferenceInput source="guestTeamId" reference="teams" label="Команда 2">
+        <SelectInput optionText="title" />
+      </ReferenceInput>
+
+      <NumberInput source="homeScore" label="Счёт (Команда 1)" />
+      <NumberInput source="guestScore" label="Счёт (Команда 2)" />
+      <NumberInput source="round" label="Раунд" />
 
       <ImageInput
         source="imagesRaw"
@@ -115,13 +115,17 @@ export const MatchCreate = (props) => (
       >
         <ImageField source="src" title="title" />
       </ImageInput>
+
+      <ImageInput source="videosRaw" label="Видео" multiple accept="video/*">
+        <ImageField source="src" title="title" />
+      </ImageInput>
     </SimpleForm>
   </Create>
 );
 
 // 📌 Редактирование матча
 export const MatchEdit = (props) => (
-  <Edit {...props} transform={handleSaveWithImages}>
+  <Edit {...props} transform={handleSaveWithImagesAndVideos}>
     <SimpleForm>
       <ReferenceInput source="leagueId" reference="leagues" label="Лига">
         <SelectInput optionText="title" />
@@ -161,6 +165,29 @@ export const MatchEdit = (props) => (
         label="Старые изображения"
         multiple
         accept="image/*"
+        format={(value) =>
+          value?.map((src) => ({
+            src: src.startsWith('http') ? src : `${uploadsConfig}${src}`,
+            title: src,
+          })) || []
+        }
+        parse={(value) =>
+          value.map((file) =>
+            file.rawFile ? file.rawFile : file.src.replace(uploadsConfig, '')
+          )
+        }
+      >
+        <ImageField source="src" title="title" />
+      </ImageInput>
+
+      <ImageInput source="videosRaw" label="Видео" multiple accept="video/*">
+        <ImageField source="src" title="title" />
+      </ImageInput>
+      <ImageInput
+        source="videos"
+        label="Старые видео"
+        multiple
+        accept="video/*"
         format={(value) =>
           value?.map((src) => ({
             src: src.startsWith('http') ? src : `${uploadsConfig}${src}`,

@@ -100,6 +100,7 @@
   height: 60px;
   max-width: 140px !important;
   gap: 16px;
+  margin-top: 10px;
 }
 
 .containerBlockLeftButtonsControl span {
@@ -293,7 +294,7 @@
   .containerBlockLeftButtons {
     display: flex;
     align-items: center;
-    margin-top: 19px;
+    /* margin-top: 19px; */
     flex-direction: row;
     gap: 12px;
     width: 100%;

@@ -144,3 +144,55 @@ export const handleSaveWithImages = async (data) => {
     logoRaw: undefined,
   };
 };
+
+export const handleSaveWithImagesAndVideos = async (data) => {
+  const upload = async (files, type = 'files') => {
+    if (!files || files.length === 0) return [];
+
+    const formData = new FormData();
+    files.forEach((file) => {
+      if (file.rawFile) formData.append(type, file.rawFile);
+    });
+
+    const endpoint =
+      type === 'videos'
+        ? `${serverConfig}/upload-videos`
+        : `${serverConfig}/upload`;
+
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const json = await res.json();
+    return json.filePaths || [];
+  };
+
+  // Загрузка
+  const uploadedImages = await upload(data.imagesRaw || [], 'files');
+  const uploadedLogo = await upload(data.logoRaw || [], 'files');
+  const uploadedVideos = await upload(data.videosRaw || [], 'videos');
+
+  // Старые
+  const oldImages = Array.isArray(data.images)
+    ? data.images.filter((img) => typeof img === 'string')
+    : [];
+  const oldLogo = Array.isArray(data.logo)
+    ? data.logo.filter((img) => typeof img === 'string')
+    : [];
+  const oldVideos = Array.isArray(data.videos)
+    ? data.videos.filter((v) => typeof v === 'string')
+    : [];
+
+  return {
+    ...data,
+    images: [...oldImages, ...uploadedImages],
+    logo: [...oldLogo, ...uploadedLogo],
+    videos: [...oldVideos, ...uploadedVideos],
+
+    // очищаем временные поля
+    imagesRaw: undefined,
+    logoRaw: undefined,
+    videosRaw: undefined,
+  };
+};
