@@ -1,18 +1,25 @@
 import React from 'react';
 import classes from './Header.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 function Header({ children, ...props }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   return (
     <>
       <div className={classes.container}>
         <div className={classes.containerBlock}>
           <div className={classes.containerBlockTop}>
             <div className={classes.containerBlockTopLeft}>
-              <img src="../images/nartLogo.svg" />
-              <span>ФУТБОЛЬНЫЙ КЛУБ «НАРТ»</span>
+              <img src="../images/nartLogo.svg" onClick={() => navigate('/')} />
+              <span
+                style={{
+                  color: pathname === '/' ? '' : '#000',
+                }}
+              >
+                ФУТБОЛЬНЫЙ КЛУБ «НАРТ»
+              </span>
             </div>
             <div className={classes.containerBlockTopRight}>
               <span
@@ -56,9 +63,18 @@ function Header({ children, ...props }) {
               </span>
             </div>
           </div>
-          <div className={classes.containerBlockCenter}></div>
-          <div className={classes.containerBlockBottom}>
-            <ul>
+          <div className={classes.containerBlockCenter} style={{}}></div>
+          <div
+            className={classes.containerBlockBottom}
+            style={{
+              backgroundColor: pathname === '/' ? '' : '#166137',
+            }}
+          >
+            <ul
+              style={{
+                backgroundColor: pathname === '/' ? '' : '#166137',
+              }}
+            >
               <li>
                 <Link to={''}>О КЛУБЕ</Link>
               </li>
@@ -66,7 +82,7 @@ function Header({ children, ...props }) {
                 <Link to={''}>ТУРНИРЫ</Link>
               </li>
               <li>
-                <Link to={''}>НОВОСТИ</Link>
+                <Link to={'/news'}>НОВОСТИ</Link>
               </li>
               <li>
                 <Link to={''}>МЕДИА</Link>

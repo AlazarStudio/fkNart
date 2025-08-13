@@ -1,0 +1,363 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.containerBlockTitle {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  width: 100%;
+  margin-top: 254px;
+}
+
+.containerBlockTitle span:nth-of-type(1) {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.containerBlockTitle span:nth-of-type(2) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 37px;
+  font-size: 14px;
+  font-weight: 400;
+  background-color: #f2f2f2;
+  border-radius: 20px;
+  color: #002e60;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.containerBlockTitle span:nth-of-type(2):hover {
+  background-color: #007031;
+  color: #fff;
+}
+
+.containerBlock {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1300px;
+}
+
+.containerBlockEl {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 33px;
+  gap: 44px 2%;
+}
+
+.matchCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  padding: 34px 26px;
+  width: 48%;
+  border-radius: 20px;
+  height: 358px;
+  position: relative;
+}
+
+.matchImg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+  filter: brightness(70%);
+}
+
+.matchInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  z-index: 1;
+  color: #fff;
+  height: 70px;
+}
+
+.matchInfoLeft {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #d9d9d9;
+}
+
+.svg img {
+  width: 30px;
+  opacity: 0.7;
+}
+
+.matchInfoLeftData {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.matchInfoLeftDataTop {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.matchInfoLeftDataCenter {
+  width: 93px;
+  height: 4px;
+  background-color: #0090cf;
+  margin: 7px 0;
+}
+
+.matchInfoLeftDataBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.matchInfoRight {
+  display: flex;
+
+  height: 100%;
+  align-items: center;
+  gap: 20px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.matchInfoRight img {
+  width: 40px;
+  cursor: pointer;
+}
+
+.containerBlockTitle1 {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin-top: 60px;
+}
+
+.containerBlockTitle1 span:nth-of-type(1) {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.containerBlockTitle1 span:nth-of-type(2) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 37px;
+  font-size: 14px;
+  font-weight: 400;
+  background-color: #f2f2f2;
+  border-radius: 20px;
+  color: #002e60;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.containerBlockTitle1 span:nth-of-type(2):hover {
+  background-color: #007031;
+  color: #fff;
+}
+
+.icon {
+  width: 20px !important;
+  margin-left: 5px;
+}
+
+.videoModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.videoContent {
+  background: #000;
+  padding: 20px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.videoContent video {
+  max-width: 1300px;
+  max-height: 80vh;
+}
+
+.videoContent button {
+  margin-top: 10px;
+  background: #fff;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.videoContent button:hover {
+  color: #000;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.pageButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 20px;
+  }
+
+  .containerBlockTitle {
+    flex-direction: column;
+    margin-top: 110px;
+  }
+
+  .containerBlockTitle span:nth-of-type(1) {
+    font-size: 24px;
+  }
+
+  .containerBlockTitle span:nth-of-type(2) {
+  }
+
+  .containerBlockTitle span:nth-of-type(2):hover {
+  }
+
+  .containerBlock {
+  }
+
+  .containerBlockEl {
+    flex-direction: column;
+    margin-top: 23px;
+    gap: 17px;
+  }
+
+  .matchCard {
+    padding: 25px;
+    width: 100%;
+    height: 183px;
+    position: relative;
+  }
+
+  .matchImg {
+  }
+
+  .matchInfo {
+    height: 40px;
+  }
+
+  .matchInfoLeft {
+    gap: 10px;
+  }
+
+  .svg {
+    width: 33px;
+    height: 33px;
+  }
+
+  .svg img {
+    width: 16px;
+  }
+
+  .matchInfoLeftData {
+  }
+
+  .matchInfoLeftDataTop {
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .matchInfoLeftDataCenter {
+    width: 50px;
+    height: 2px;
+    margin: 1px 0;
+  }
+
+  .matchInfoLeftDataBottom {
+    font-size: 10px;
+  }
+
+  .matchInfoRight {
+    gap: 10px;
+    font-size: 10px;
+  }
+
+  .matchInfoRight img {
+    width: 20px;
+    cursor: pointer;
+  }
+
+  .icon {
+    width: 15px !important;
+    padding-top: 2px;
+  }
+
+  .videoModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .videoContent {
+    background: #000;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+  }
+
+  .videoContent video {
+    max-width: 100%;
+    max-height: 80vh;
+  }
+
+  .videoContent button {
+    margin-top: 10px;
+    background: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+
+  .videoContent button:hover {
+    color: #000;
+  }
+}
