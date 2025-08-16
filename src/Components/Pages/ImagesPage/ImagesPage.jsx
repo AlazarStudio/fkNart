@@ -73,7 +73,7 @@ export default function ImagesPage() {
               <div
                 key={match.id}
                 className={classes.matchCard}
-                onClick={() => navigate(`/matches/${match.id}`)}
+                onClick={() => navigate(`/images/${match.id}`)}
               >
                 {match.images?.[0] && (
                   <img

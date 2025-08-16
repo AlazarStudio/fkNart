@@ -16,52 +16,82 @@ import {
   ImageInput,
   ImageField,
   FunctionField,
+  AutocompleteInput, // ⬅️ добавили
 } from 'react-admin';
 import { handleSaveWithImages } from '../JS/fileUploadUtils';
 import uploadsConfig from '../../../../uploadsConfig';
 
-// ✅ Объявляем только один раз
-const positions = [
+// === Разделённые списки ===
+const playerPositions = [
   { id: 'GOALKEEPER', name: 'Вратарь' },
   { id: 'DEFENDER', name: 'Защитник' },
   { id: 'MIDFIELDER', name: 'Полузащитник' },
   { id: 'FORWARD', name: 'Нападающий' },
 ];
 
-// 📌 Список игроков
+const staffRoles = [
+  { id: 'HEAD_COACH', name: 'Главный тренер' },
+  { id: 'ASSISTANT_COACH', name: 'Тренер/ассистент' },
+  { id: 'GOALKEEPER_COACH', name: 'Тренер вратарей' },
+  { id: 'FITNESS_COACH', name: 'Тренер по физподготовке' },
+  { id: 'ANALYST', name: 'Аналитик' },
+  { id: 'PHYSIOTHERAPIST', name: 'Физиотерапевт' },
+  { id: 'DOCTOR', name: 'Врач команды' },
+  { id: 'TEAM_MANAGER', name: 'Администратор команды' },
+  { id: 'MASSEUR', name: 'Массажист' },
+  { id: 'KIT_MANAGER', name: 'Экипировщик' },
+];
+
+// Для отображения названия позиции в списке
+const positionsMap = [...playerPositions, ...staffRoles].reduce(
+  (acc, p) => ((acc[p.id] = p.name), acc),
+  {}
+);
+
+// Объединяем и помечаем группу (для группировки в селекте)
+const groupedPositions = [
+  ...playerPositions.map((p) => ({ ...p, group: 'Игроки' })),
+  ...staffRoles.map((p) => ({ ...p, group: 'Тренерский штаб' })),
+];
+
+// 📌 Список игроков/сотрудников
 export const PlayerList = (props) => (
   <List {...props}>
     <Datagrid rowClick="edit">
       <TextField source="id" />
       <TextField source="name" label="Имя" />
       <FunctionField
-        label="Позиция"
-        render={(record) => {
-          const pos = positions.find((p) => p.id === record.position);
-          return pos ? pos.name : record.position;
-        }}
+        label="Позиция / Роль"
+        render={(record) =>
+          positionsMap[record.position] || record.position || '—'
+        }
       />
       <TextField source="number" label="Номер" />
-      <FunctionField
-        label="Команда"
-        render={(record) => record.team?.title || '—'}
-      />
-      <FunctionField
-        label="Фото"
-        render={(record) => record.images?.length || 0}
-      />
+      <FunctionField label="Команда" render={(r) => r.team?.title || '—'} />
+      <FunctionField label="Фото" render={(r) => r.images?.length || 0} />
       <EditButton />
       <DeleteButton />
     </Datagrid>
   </List>
 );
 
-// 📌 Создание игрока
+// 📌 Создание
 export const PlayerCreate = (props) => (
   <Create {...props} transform={handleSaveWithImages}>
     <SimpleForm>
       <TextInput source="name" label="Имя" fullWidth />
-      <SelectInput source="position" label="Позиция" choices={positions} />
+
+      {/* Группированный селект: Игроки / Тренерский штаб */}
+      <AutocompleteInput
+        source="position"
+        label="Позиция / Роль"
+        choices={groupedPositions}
+        optionText="name"
+        optionValue="id"
+        fullWidth
+        options={{ groupBy: (choice) => choice.group }}
+      />
+
       <NumberInput source="number" label="Номер" />
       <DateInput source="birthDate" label="Дата рождения" />
 
@@ -76,12 +106,23 @@ export const PlayerCreate = (props) => (
   </Create>
 );
 
-// 📌 Редактирование игрока
+// 📌 Редактирование
 export const PlayerEdit = (props) => (
   <Edit {...props} transform={handleSaveWithImages}>
     <SimpleForm>
       <TextInput source="name" label="Имя" fullWidth />
-      <SelectInput source="position" label="Позиция" choices={positions} />
+
+      {/* Группированный селект: Игроки / Тренерский штаб */}
+      <AutocompleteInput
+        source="position"
+        label="Позиция / Роль"
+        choices={groupedPositions}
+        optionText="name"
+        optionValue="id"
+        fullWidth
+        options={{ groupBy: (choice) => choice.group }}
+      />
+
       <NumberInput source="number" label="Номер" />
       <DateInput source="birthDate" label="Дата рождения" />
 

@@ -76,7 +76,7 @@ function Header({ children, ...props }) {
               }}
             >
               <li>
-                <Link to={''}>О КЛУБЕ</Link>
+                <Link to={'/club'}>О КЛУБЕ</Link>
               </li>
               <li>
                 <Link to={''}>ТУРНИРЫ</Link>

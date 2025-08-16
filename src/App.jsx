@@ -11,6 +11,8 @@ import NewsPage from './Components/Pages/NewsPage/NewsPage';
 import OneNewsPage from './Components/Pages/OneNewsPage/OneNewsPage';
 import ImagesPage from './Components/Pages/ImagesPage/ImagesPage';
 import VideosPage from './Components/Pages/VideosPage/VideosPage';
+import OneImagesPage from './Components/Pages/OneImagesPage/OneImagesPage';
+import ClubPage from './Components/Pages/ClubPage/ClubPage';
 
 function App() {
   return (
@@ -21,7 +23,9 @@ function App() {
           <Route path="/news" element={<NewsPage />} />
           <Route path="/news/:id" element={<OneNewsPage />} />
           <Route path="/images" element={<ImagesPage />} />
+          <Route path="/images/:id" element={<OneImagesPage />} />
           <Route path="/videos" element={<VideosPage />} />
+          <Route path="/club" element={<ClubPage />} />
           <Route path="*" element={<Non_Found_Page />} />
         </Route>
         <Route path="/admin/*" element={<AdminPage />} />
