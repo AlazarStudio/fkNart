@@ -165,7 +165,7 @@ export default function Container2() {
                   </div>
                 );
               })}
-              <button onClick={() => navigate('/matchCalendar')}>
+              <button onClick={() => navigate('/calendar')}>
                 ВСЕ РЕЗУЛЬТАТЫ
               </button>
             </div>

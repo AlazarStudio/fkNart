@@ -13,6 +13,10 @@ import ImagesPage from './Components/Pages/ImagesPage/ImagesPage';
 import VideosPage from './Components/Pages/VideosPage/VideosPage';
 import OneImagesPage from './Components/Pages/OneImagesPage/OneImagesPage';
 import ClubPage from './Components/Pages/ClubPage/ClubPage';
+import OnePlayerPage from './Components/Pages/OnePlayerPage/OnePlayerPage';
+import CalendarPage from './Components/Pages/CalendarPage/CalendarPage';
+import TournamentTablePage from './Components/Pages/TournamentTablePage/TournamentTablePage';
+import MatchPage from './Components/Pages/MatchPage/MatchPage';
 
 function App() {
   return (
@@ -26,6 +30,10 @@ function App() {
           <Route path="/images/:id" element={<OneImagesPage />} />
           <Route path="/videos" element={<VideosPage />} />
           <Route path="/club" element={<ClubPage />} />
+          <Route path="/club/:playerId" element={<OnePlayerPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/tournamentTable" element={<TournamentTablePage />} />
+          <Route path="/match/:matchId" element={<MatchPage />} />
           <Route path="*" element={<Non_Found_Page />} />
         </Route>
         <Route path="/admin/*" element={<AdminPage />} />

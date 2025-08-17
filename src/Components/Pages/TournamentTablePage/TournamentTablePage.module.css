@@ -1,0 +1,188 @@
+.container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: #fff;
+  margin-top: 204px;
+}
+
+.pageWrap {
+  width: 100%;
+  max-width: 1300px;
+  padding: 48px 16px 72px;
+  box-sizing: border-box;
+}
+
+.title {
+  margin: 0 0 16px 0;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+/* Фильтры */
+.filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.filter span {
+  color: #666;
+  font-weight: 600;
+}
+
+.filter select {
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #c5c6c6;
+  outline: none;
+  padding: 0 12px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Заголовок лиги */
+.leagueTitle {
+  font-weight: 800;
+  color: #005224;
+  margin: 6px 0 14px;
+  text-transform: uppercase;
+}
+
+/* Таблица */
+.tableWrap {
+  border: 1px solid #e5e6e6;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 70px 1fr 70px 70px 70px 70px 120px 90px;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.head {
+  background: #0b6a34;
+  color: #fff;
+  font-weight: 700;
+}
+
+.colPos {
+  text-align: center;
+  font-weight: 700;
+}
+
+.colTeam {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.colTeam img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.logoStub {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ececec;
+}
+
+.teamName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.colNum {
+  text-align: center;
+}
+
+.colGoals {
+  text-align: center;
+}
+
+.points {
+  font-weight: 800;
+}
+
+/* Подсветка выбранной команды */
+.highlight {
+  background: #e9f6ef;
+}
+
+/* Пагинация */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.pageBtn {
+  width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #c5c6c6;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.pageBtn:hover {
+  background: #f3f3f3;
+}
+
+.pageActive {
+  background: #0b6a34;
+  color: #fff;
+  border-color: #0b6a34;
+}
+
+/* Адаптив */
+
+@media (max-width: 720px) {
+  .container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background: #fff;
+    margin-top: 104px;
+  }
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .row {
+    grid-template-columns: 46px 1fr 50px 50px 50px 50px 80px 60px;
+    padding: 10px 10px;
+    gap: 6px;
+  }
+
+  .leagueTitle {
+    font-size: 14px;
+  }
+}

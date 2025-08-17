@@ -17,14 +17,18 @@ import {
   useRecordContext,
   FunctionField,
   RadioButtonGroupInput,
+  FormDataConsumer,
 } from 'react-admin';
 
+// соответствуют enum в Prisma
 const eventTypes = [
   { id: 'GOAL', name: 'Гол' },
   { id: 'ASSIST', name: 'Передача' },
   { id: 'YELLOW_CARD', name: 'Жёлтая карточка' },
   { id: 'RED_CARD', name: 'Красная карточка' },
   { id: 'SUBSTITUTION', name: 'Замена' },
+  { id: 'PENALTY_SCORED', name: 'Пенальти (забит)' },
+  { id: 'PENALTY_MISSED', name: 'Пенальти (не реализован)' },
 ];
 
 export const MatchEventList = (props) => (
@@ -60,7 +64,6 @@ const MatchEventForm = (props) => {
   const [teams, setTeams] = useState([]);
   const [players, setPlayers] = useState([]);
 
-  // ✅ При редактировании заполняем стейт
   useEffect(() => {
     if (record) {
       if (record.match?.leagueId) setLeagueId(record.match.leagueId);
@@ -69,7 +72,6 @@ const MatchEventForm = (props) => {
     }
   }, [record]);
 
-  // ✅ Загружаем матчи по лиге
   useEffect(() => {
     if (leagueId) {
       dataProvider
@@ -81,9 +83,8 @@ const MatchEventForm = (props) => {
     } else {
       setMatches([]);
     }
-  }, [leagueId]);
+  }, [leagueId, dataProvider]);
 
-  // ✅ Загружаем команды по матчу
   useEffect(() => {
     if (matchId) {
       dataProvider.getOne('matches', { id: matchId }).then(({ data }) => {
@@ -97,9 +98,8 @@ const MatchEventForm = (props) => {
     } else {
       setTeams([]);
     }
-  }, [matchId]);
+  }, [matchId, dataProvider]);
 
-  // ✅ Загружаем игроков по команде
   useEffect(() => {
     if (teamId) {
       dataProvider
@@ -111,11 +111,11 @@ const MatchEventForm = (props) => {
     } else {
       setPlayers([]);
     }
-  }, [teamId]);
+  }, [teamId, dataProvider]);
 
   return (
     <SimpleForm {...props}>
-      {/* Лига */}
+      {/* Лига для фильтрации матчей */}
       <ReferenceInput source="leagueId" reference="leagues" label="Лига">
         <SelectInput
           optionText="title"
@@ -159,7 +159,7 @@ const MatchEventForm = (props) => {
         parse={(v) => Number(v)}
       />
 
-      {/* Игрок */}
+      {/* Игрок (участник события) */}
       <SelectInput
         source="playerId"
         label="Игрок"
@@ -168,16 +168,25 @@ const MatchEventForm = (props) => {
         parse={(v) => Number(v)}
       />
 
-      {/* Ассистент */}
-      <SelectInput
-        source="assistPlayerId"
-        label="Ассистент"
-        choices={players.map((p) => ({ id: p.id, title: p.name }))}
-        optionText="title"
-        emptyText="Без ассистента"
-        parse={(v) => (v === '' ? null : Number(v))}
-        format={(v) => (v == null ? '' : v)}
-      />
+      {/* Тип события */}
+      <SelectInput source="type" label="Тип события" choices={eventTypes} />
+
+      {/* Ассистент — только если тип = GOAL (ассист на пенальти обычно не считают) */}
+      <FormDataConsumer>
+        {({ formData }) =>
+          formData.type === 'GOAL' ? (
+            <SelectInput
+              source="assistPlayerId"
+              label="Ассистент"
+              choices={players.map((p) => ({ id: p.id, title: p.name }))}
+              optionText="title"
+              emptyText="Без ассистента"
+              parse={(v) => (v === '' ? null : Number(v))}
+              format={(v) => (v == null ? '' : v)}
+            />
+          ) : null
+        }
+      </FormDataConsumer>
 
       <NumberInput source="minute" label="Минута" />
       <RadioButtonGroupInput
@@ -190,7 +199,6 @@ const MatchEventForm = (props) => {
         parse={(v) => Number(v)}
         format={(v) => Number(v)}
       />
-      <SelectInput source="type" label="Тип события" choices={eventTypes} />
       <TextInput source="description" label="Описание" fullWidth />
     </SimpleForm>
   );

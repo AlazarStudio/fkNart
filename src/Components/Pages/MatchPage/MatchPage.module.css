@@ -1,0 +1,441 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.pageWrap {
+  max-width: 1300px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+  margin-top: 204px;
+}
+
+.headerCard {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0b612f;
+  color: #fff;
+  margin-bottom: 22px;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.15;
+  pointer-events: none;
+}
+.headerInner {
+  position: relative;
+  padding: 18px;
+}
+.headerMeta {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.95;
+  font-weight: 500;
+}
+.stadium {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.scoreRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+  margin-top: 12px;
+  padding: 30px 100px;
+}
+.teamBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  width: 297px;
+  height: 307px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.img {
+  width: 100% !important;
+  height: 204px !important;
+  border-radius: 0 !important;
+  object-fit: cover;
+}
+
+.teamBoxBottom {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 103px;
+  background-color: #fff;
+  color: #000;
+  margin-top: -11px;
+}
+
+.teamBox img,
+.logoStub {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b612f;
+  font-weight: 700;
+}
+.teamName {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+.scoreBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.score {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1;
+}
+.halfScore {
+  margin-top: 2px;
+  opacity: 0.85;
+}
+.leagueRound {
+  margin-top: 6px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 18px;
+}
+.tabs button {
+  border: 1px solid #c6c5c5;
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #0b612f;
+  transition: all 0.3s ease-in-out;
+}
+.tabs button.active {
+  background: #0b612f;
+  color: #fff;
+  border-color: #0b612f;
+}
+
+/* --- Протокол --- */
+.protocolCard {
+  background: #fff;
+  border: 1px solid #c5c6c6;
+  border-radius: 16px;
+  padding: 16px;
+}
+.protocolHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.sideHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sideHeader img,
+.protocolCard .logoStub {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f6f6f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.protoTitle {
+  font-weight: 800;
+  color: #0b612f;
+}
+
+/* колонки состава */
+.protocolGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.col {
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 10px;
+}
+.colHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  justify-content: flex-start;
+}
+.colTitle {
+  font-weight: 800;
+  color: #0b612f;
+}
+
+/* единый порядок строк и выравнивание СЛЕВА для обеих колонок */
+.playerRow {
+  display: grid;
+  grid-template-columns: 42px 1fr 40px;
+  gap: 8px;
+  padding: 8px 6px;
+  border-bottom: 1px dashed #eee;
+  align-items: center;
+  text-align: left;
+}
+.playerRow:last-child {
+  border-bottom: none;
+}
+/* убираем зеркальность на десктопе */
+.playerRow.right {
+  grid-template-columns: 42px 1fr 40px;
+  text-align: left;
+}
+
+.shirt {
+  width: 36px;
+  height: 28px;
+  background: #f7f7f7;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+.pname {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ppos {
+  opacity: 0.8;
+  font-size: 12px;
+}
+
+/* --- События --- */
+.eventsCard {
+  background: #fff;
+  border: 1px solid #c5c6c6;
+  border-radius: 16px;
+  padding: 12px;
+}
+.halfBlock {
+  margin-bottom: 8px;
+}
+.halfTitle {
+  font-weight: 800;
+  color: #0b612f;
+  margin: 6px 0 8px;
+}
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.eventRow {
+  display: grid;
+  grid-template-columns: 48px 26px 2fr;
+  gap: 8px;
+  align-items: center;
+}
+.eventRow.right {
+  grid-template-columns: 1fr 26px 408px;
+  text-align: right;
+}
+.eventRow.left {
+  grid-template-columns: 448px 26px 1fr;
+  text-align: left;
+}
+.evMinute {
+  font-weight: 800;
+  color: #0b612f;
+}
+.evIcon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+.evText {
+  line-height: 1.2;
+}
+
+/* --- Фото/Видео --- */
+.photosCard {
+  border: 1px solid #c5c6c6;
+  border-radius: 16px;
+  padding: 14px;
+}
+.photosGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+.photosGrid img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.videosList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.videoBox iframe,
+.videoBox video {
+  width: 100%;
+  height: 180px;
+  border: none;
+  border-radius: 12px;
+  background: #000;
+}
+
+.empty {
+  padding: 18px;
+  text-align: center;
+  color: #666;
+  font-weight: 500;
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  .pageWrap {
+    max-width: 1300px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-top: 104px;
+  }
+  .headerCard {
+    border-radius: 0;
+    height: 273px;
+  }
+  .bg {
+    display: none;
+  }
+  .headerMeta {
+    flex-direction: column;
+    gap: 18px;
+    font-size: 14px;
+  }
+  .stadium {
+    font-size: 12px;
+  }
+  .scoreRow {
+    gap: 16px;
+    margin-top: 15px;
+    padding: 30px 10px;
+  }
+  .teamBox {
+    gap: 5px;
+    width: 40%;
+    height: 90px;
+    overflow: visible;
+    padding: 0;
+  }
+  .img {
+    display: none !important;
+  }
+  .teamBoxBottom {
+    flex-direction: column;
+    background: inherit;
+    color: #fff;
+    font-size: 18px;
+    gap: 10px;
+  }
+  .teamBox img,
+  .logoStub {
+    width: 45px;
+    height: 45px;
+    border-radius: 0;
+  }
+  .teamName {
+    width: 100px !important;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .tabs {
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 20px;
+    width: 100%;
+  }
+
+  .protocolCard {
+    width: 100%;
+  }
+
+  .protocolHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .protocolGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .colHead {
+    justify-content: flex-start;
+  }
+  .playerRow,
+  .playerRow.right {
+    grid-template-columns: 42px 1fr 40px;
+    text-align: left;
+  }
+
+  .eventRow {
+    grid-template-columns: 48px 26px 2fr;
+  }
+  .eventRow.right {
+    grid-template-columns: 1fr 26px 2fr;
+    text-align: right;
+  }
+  .eventRow.left {
+    grid-template-columns: 2fr 26px 1fr;
+    text-align: left;
+  }
+
+  .videosList {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  .videoBox iframe,
+  .videoBox video {
+    height: 180px;
+  }
+}

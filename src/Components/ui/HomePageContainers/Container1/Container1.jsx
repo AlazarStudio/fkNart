@@ -3,8 +3,11 @@ import classes from './Container1.module.css';
 import axios from 'axios';
 import serverConfig from '../../../../serverConfig';
 import uploadsConfig from '../../../../uploadsConfig';
+import { useNavigate } from 'react-router-dom';
 
 export default function Container1() {
+  const navigate = useNavigate();
+
   const [matches, setMatches] = useState([]);
   const [type, setType] = useState('FINISHED');
   const [index, setIndex] = useState(0);
@@ -187,7 +190,11 @@ export default function Container1() {
               const formatted = `${dayMonth} ${hours}:${minutes} ${weekday}`;
 
               return (
-                <div key={`${match.id}-${i}`} className={classes.matchCard}>
+                <div
+                  key={`${match.id}-${i}`}
+                  className={classes.matchCard}
+                  onClick={() => navigate(`/match/${match.id}`)}
+                >
                   <div className={classes.matchDate}>{formatted}</div>
                   <div className={classes.matchStadium}>
                     <img src="../images/nartLocation.svg" alt="loc" />
@@ -213,9 +220,8 @@ export default function Container1() {
                 </div>
               );
             })}
-            
           </div>
-            {perPage === 1 && total > 1 && (
+          {perPage === 1 && total > 1 && (
             <div className={classes.dots}>
               {filtered.map((_, i) => (
                 <span
@@ -228,7 +234,6 @@ export default function Container1() {
             </div>
           )}
         </div>
-        
       </div>
     </div>
   );
