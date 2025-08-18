@@ -68,7 +68,11 @@ export default function Container2() {
           </span>
           <div className={classes.containerBlockLeftNews}>
             {news.map((news) => (
-              <div key={news.id} className={classes.containerBlockLeftNewsCard}>
+              <div
+                key={news.id}
+                className={classes.containerBlockLeftNewsCard}
+                onClick={() => navigate(`/news/${news.id}`)}
+              >
                 <img src={`${uploadsConfig}${news.images[0]}`} alt="home" />
                 <div className={classes.containerBlockLeftNewsCardBottom}>
                   <span>{news.title}</span>

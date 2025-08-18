@@ -75,6 +75,7 @@
   padding: 12px 14px;
   gap: 12px;
   width: 655px;
+  cursor: pointer;
 }
 
 .place {
@@ -245,6 +246,7 @@
 .teamName {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 9px;
 }
 
@@ -278,7 +280,7 @@
   .pageWrap {
     width: 100%;
     max-width: 1300px;
-    margin-top: 140px;
+    margin-top: 80px;
     padding: 20px;
   }
 

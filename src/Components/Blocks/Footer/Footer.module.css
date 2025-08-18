@@ -65,7 +65,7 @@
   margin-top: 32px;
 }
 
-.containerBlockLeftLink span {
+.containerBlockLeftLink a {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,17 +76,17 @@
   background-color: #d9d9d9;
 }
 
-.containerBlockLeftLink span img:nth-of-type(1) {
+.containerBlockLeftLink a img:nth-of-type(1) {
   width: 32px;
   height: 28px;
 }
 
-.containerBlockLeftLink span img:nth-of-type(2) {
+.containerBlockLeftLink a img:nth-of-type(2) {
   width: 37px;
   height: 18px;
 }
 
-.containerBlockLeftLink span img:nth-of-type(3) {
+.containerBlockLeftLink a img:nth-of-type(3) {
   width: 27px;
   height: 27px;
 }

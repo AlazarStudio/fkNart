@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import serverConfig from '../../../serverConfig';
@@ -78,6 +78,55 @@ export default function MatchPage() {
   const [homePlayers, setHomePlayers] = useState([]);
   const [guestPlayers, setGuestPlayers] = useState([]);
   const [tab, setTab] = useState(TAB.EVENTS);
+
+  // --------- ГАЛЕРЕЯ -----------
+  const [isGalleryOpen, setGalleryOpen] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const openGallery = (i) => {
+    setGalleryIndex(i);
+    setGalleryOpen(true);
+    // запретить скролл фона
+    document.body.style.overflow = 'hidden';
+  };
+  const closeGallery = () => {
+    setGalleryOpen(false);
+    document.body.style.overflow = '';
+  };
+  const nextImg = () => {
+    if (!images.length) return;
+    setGalleryIndex((i) => (i + 1) % images.length);
+  };
+  const prevImg = () => {
+    if (!images.length) return;
+    setGalleryIndex((i) => (i - 1 + images.length) % images.length);
+  };
+
+  // клавиатура
+  useEffect(() => {
+    const onKey = (e) => {
+      if (!isGalleryOpen) return;
+      if (e.key === 'Escape') closeGallery();
+      if (e.key === 'ArrowRight') nextImg();
+      if (e.key === 'ArrowLeft') prevImg();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isGalleryOpen]);
+
+  // свайпы
+  const onTouchStart = (e) =>
+    (touchStartX.current = e.changedTouches[0].clientX);
+  const onTouchEnd = (e) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    const dx = touchEndX.current - touchStartX.current;
+    const threshold = 40; // пикселей
+    if (dx > threshold) prevImg();
+    else if (dx < -threshold) nextImg();
+  };
+  // ------------------------------
 
   useEffect(() => {
     let alive = true;
@@ -375,27 +424,10 @@ export default function MatchPage() {
         {tab === TAB.PROTOCOL && (
           <div className={classes.protocolCard}>
             <div className={classes.protocolHeader}>
-              {/* <div className={classes.sideHeader}>
-                {homeLogo ? (
-                  <img src={homeLogo} alt="" />
-                ) : (
-                  <div className={classes.logoStub}>H</div>
-                )}
-                <span>{match?.homeTeam?.title}</span>
-              </div> */}
               <div className={classes.protoTitle}>СТАРТОВЫЕ СОСТАВЫ</div>
-              {/* <div className={classes.sideHeader}>
-                {guestLogo ? (
-                  <img src={guestLogo} alt="" />
-                ) : (
-                  <div className={classes.logoStub}>G</div>
-                )}
-                <span>{match?.guestTeam?.title}</span>
-              </div> */}
             </div>
 
             <div className={classes.protocolGrid}>
-              {/* Левая колонка */}
               <div className={classes.col}>
                 <div className={classes.colHead}>
                   {homeLogo ? (
@@ -423,7 +455,6 @@ export default function MatchPage() {
                 )}
               </div>
 
-              {/* Правая колонка — ТАК ЖЕ слева-направо */}
               <div className={classes.col}>
                 <div className={classes.colHead}>
                   {guestLogo ? (
@@ -544,6 +575,8 @@ export default function MatchPage() {
                     alt={`Фото #${i + 1}`}
                     loading="lazy"
                     onError={(e) => (e.currentTarget.style.display = 'none')}
+                    onClick={() => openGallery(i)}
+                    className={classes.photoThumb}
                   />
                 ))}
               </div>
@@ -582,6 +615,56 @@ export default function MatchPage() {
             )}
           </div>
         )}
+
+        {/* -------- LIGHTBOX / GALLERY -------- */}
+        {isGalleryOpen && images.length > 0 && (
+          <div
+            className={classes.lightboxOverlay}
+            onClick={(e) => {
+              // клик по фону закрывает, но не по контенту
+              if (e.target === e.currentTarget) closeGallery();
+            }}
+          >
+            <button
+              className={classes.lbClose}
+              onClick={closeGallery}
+              aria-label="Закрыть"
+            >
+              ×
+            </button>
+
+            <button
+              className={`${classes.lbNav} ${classes.lbPrev}`}
+              onClick={prevImg}
+              aria-label="Предыдущее"
+            >
+              ‹
+            </button>
+            <div
+              className={classes.lightboxContent}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+            >
+              <img
+                src={`${uploadsConfig}${images[galleryIndex]}`}
+                alt={`Фото ${galleryIndex + 1} из ${images.length}`}
+                className={classes.lightboxImg}
+                draggable="false"
+              />
+              <div className={classes.lbCounter}>
+                {galleryIndex + 1} / {images.length}
+              </div>
+            </div>
+            <button
+              className={`${classes.lbNav} ${classes.lbNext}`}
+              onClick={nextImg}
+              aria-label="Следующее"
+            >
+              ›
+            </button>
+          </div>
+        )}
+        {/* ------------------------------------ */}
       </div>
     </div>
   );

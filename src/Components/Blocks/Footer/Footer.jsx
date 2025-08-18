@@ -15,35 +15,50 @@ function Footer({ children, ...props }) {
             </span>
             <span className={classes.number}> +7 777 777 77 77</span>
             <div className={classes.containerBlockLeftLink}>
-              <span>
-                <img src={'../images/nartBlackTg.svg'} />
-              </span>
-              <span>
-                <img src={'../images/nartBlackVk.svg'} />
-              </span>
-              <span>
-                <img src={'../images/nartBlackWa.svg'} />
-              </span>
+              <a
+                href="https://t.me/fc_nart_cherkessk"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={'../images/nartBlackTg.svg'} alt="Telegram" />
+              </a>
+
+              <a
+                href="https://vk.com/fcnart2010"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={'../images/nartBlackVk.svg'} alt="VK" />
+              </a>
+
+              <a
+                href="https://wa.me/79000000000" // замени на реальный номер
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={'../images/nartBlackWa.svg'} alt="WhatsApp" />
+              </a>
             </div>
           </div>
           <div className={classes.containerBlockRight}>
             <div className={classes.containerBlockRightEl}>
               <span>О КЛУБЕ</span>
-              <span onClick={() => navigate('/about')}>О клубе</span>
+              <span onClick={() => navigate('/club')}>О клубе</span>
               <span></span>
               <span></span>
             </div>
             <div className={classes.containerBlockRightEl}>
               <span>ТУРНИРЫ</span>
-              <span onClick={() => navigate('/tourtamentTable')}>Турниры</span>
+              <span onClick={() => navigate('/calendar')}>Турниры</span>
               <span></span>
               <span></span>
             </div>
             <div className={classes.containerBlockRightEl}>
-              <span onClick={() => navigate('/')}>УЧАСТНИКИ</span>
-              <span onClick={() => navigate('/')}>Состав</span>
-              <span onClick={() => navigate('/')}>Тренерский штаб</span>
-              <span>Административный штаб</span>
+              <span>УЧАСТНИКИ</span>
+              <span onClick={() => navigate('/club?tab=sostav')}>Состав</span>
+              <span onClick={() => navigate('/club?tab=staff')}>
+                Тренерский штаб
+              </span>
             </div>
             <div className={classes.containerBlockRightEl}>
               <span>НОВОСТИ</span>

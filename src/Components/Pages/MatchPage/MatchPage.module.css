@@ -347,30 +347,40 @@
     flex-direction: column;
     gap: 18px;
     font-size: 14px;
+    margin-top: 15px;
   }
   .stadium {
     font-size: 12px;
   }
   .scoreRow {
-    gap: 16px;
-    margin-top: 15px;
-    padding: 30px 10px;
+    gap: 1px;
+    margin-top: 35px;
+    padding: 0;
   }
+
+  .score {
+    font-size: 24px;
+  }
+
   .teamBox {
     gap: 5px;
     width: 40%;
     height: 90px;
     overflow: visible;
     padding: 0;
+    border-radius: 0 !important;
+    /* outline: 1px solid red; */
   }
   .img {
     display: none !important;
   }
   .teamBoxBottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
     background: inherit;
     color: #fff;
-    font-size: 18px;
     gap: 10px;
   }
   .teamBox img,
@@ -395,13 +405,14 @@
 
   .protocolCard {
     width: 100%;
+    font-size: 12px;
   }
 
   .protocolHeader {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
   }
 
   .protocolGrid {
@@ -420,10 +431,12 @@
   }
 
   .eventRow {
-    grid-template-columns: 48px 26px 2fr;
+    grid-template-columns: 148px 26px 2fr !important;
+    font-size: 12px;
+    padding: 10px 0;
   }
   .eventRow.right {
-    grid-template-columns: 1fr 26px 2fr;
+    grid-template-columns: 1.4fr 22px 1fr !important;
     text-align: right;
   }
   .eventRow.left {
@@ -433,9 +446,261 @@
 
   .videosList {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    padding: 10px;
   }
   .videoBox iframe,
   .videoBox video {
-    height: 180px;
+    height: 280px;
+  }
+
+  .photosGrid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .photosGrid img {
+    width: 48%;
+    height: 120px;
+  }
+}
+
+/* Мини-превью, чтобы было понятно, что кликабельно */
+.photoThumb {
+  cursor: zoom-in;
+}
+
+/* Lightbox */
+.lightboxOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
+  align-items: center;
+  z-index: 9999;
+}
+
+.lightboxContent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.lightboxImg {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.lbCounter {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+
+.lbClose {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 28px;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  line-height: 40px;
+}
+
+.lbNav {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 48px;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.lbPrev {
+  grid-column: 1;
+}
+.lbNext {
+  grid-column: 3;
+}
+
+.lbNav:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* На узких экранах – стрелки поменьше */
+@media (max-width: 768px) {
+  .lightboxOverlay {
+    grid-template-columns: 60px 1fr 60px;
+  }
+  .lbNav {
+    font-size: 40px;
+  }
+  .lbClose {
+    top: 8px;
+    right: 10px;
+  }
+}
+
+/* превью кликабельно */
+.photoThumb {
+  cursor: zoom-in;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ячейка с иконкой скачивания */
+.photoCell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.downloadBadge {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  border: 0;
+  border-radius: 10px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+.downloadBadge:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* тулбар над сеткой */
+.photosToolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.btn,
+.btnSm {
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #0f5132;
+  color: #fff;
+}
+.btn {
+  padding: 10px 14px;
+  font-size: 14px;
+}
+.btnSm {
+  padding: 8px 10px;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Lightbox */
+.lightboxOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
+  align-items: center;
+  z-index: 9999;
+}
+.lightboxContent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.lightboxImg {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.lbTopBar {
+  position: fixed;
+  top: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  pointer-events: none;
+}
+.lbCounter {
+  color: #fff;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 10px;
+  border-radius: 10px;
+  pointer-events: auto;
+}
+.lbActions {
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.lbNav {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 48px;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.lbPrev {
+  grid-column: 1;
+}
+.lbNext {
+  grid-column: 3;
+}
+.lbNav:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 768px) {
+  .lightboxOverlay {
+    grid-template-columns: 60px 1fr 60px;
+  }
+  .lbNav {
+    font-size: 40px;
+  }
+  .lbTopBar {
+    top: 8px;
+    padding: 0 10px;
   }
 }

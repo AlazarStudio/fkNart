@@ -302,9 +302,9 @@ export default function CalendarPage() {
                               ) : (
                                 <div className={classes.logoStub}>H</div>
                               )}
-                              {/* <span className={classes.teamName}>
-                              {m?.homeTeam?.title}
-                            </span> */}
+                              <span className={classes.teamName}>
+                                {m?.homeTeam?.title}
+                              </span>
                             </div>
 
                             <div className={classes.score}>
