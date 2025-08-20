@@ -1,4 +1,21 @@
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.html [L]
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1) Реальный файл/папка — отдать как есть
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 2) Не трогаем статику и аплоады (под свои папки)
+  RewriteRule ^(assets|static|images|img|css|js|fonts|uploads)/ - [L]
+
+  # 3) Не трогаем API/бэкенд-роуты
+  RewriteRule ^(api|backend|server)/ - [L]
+
+  # 4) Служебные файлы — как есть
+  RewriteRule ^(favicon\.ico|robots\.txt|sitemap\.xml)$ - [L]
+
+  # 5) Остальное — на index.html (SPA)
+  RewriteRule . /index.html [L]
+</IfModule>
