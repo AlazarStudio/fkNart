@@ -61,7 +61,7 @@ export default function Container2() {
   return (
     <div className={classes.container}>
       <div className={classes.containerImg}>
-        <a href="https://leon.ru">
+        <a href="https://fnl.pro/leon-b">
           <img src="../images/topNart.png" />
         </a>
       </div>
