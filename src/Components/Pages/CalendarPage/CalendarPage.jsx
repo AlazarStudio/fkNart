@@ -298,7 +298,11 @@ export default function CalendarPage() {
                           <div className={classes.colScore}>
                             <div className={classes.team}>
                               {homeLogo ? (
-                                <img src={homeLogo} alt={m?.homeTeam?.title} />
+                                <img
+                                  src={homeLogo}
+                                  alt={m?.homeTeam?.title}
+                                  className={classes.logo}
+                                />
                               ) : (
                                 <div className={classes.logoStub}>H</div>
                               )}
@@ -316,6 +320,7 @@ export default function CalendarPage() {
                                 <img
                                   src={guestLogo}
                                   alt={m?.guestTeam?.title}
+                                  className={classes.logo}
                                 />
                               ) : (
                                 <div className={classes.logoStub}>G</div>

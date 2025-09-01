@@ -13,7 +13,7 @@ function Footer({ children, ...props }) {
               <img src="../images/nartLogo.svg" />
               ФУТБОЛЬНЫЙ КЛУБ «НАРТ»
             </span>
-            <span className={classes.number}> +7 777 777 77 77</span>
+            {/* <span className={classes.number}> +7 777 777 77 77</span> */}
             <div className={classes.containerBlockLeftLink}>
               <a
                 href="https://t.me/fc_nart_cherkessk"
@@ -31,13 +31,13 @@ function Footer({ children, ...props }) {
                 <img src={'../images/nartBlackVk.svg'} alt="VK" />
               </a>
 
-              <a
+              {/* <a
                 href="https://wa.me/79000000000" // замени на реальный номер
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <img src={'../images/nartBlackWa.svg'} alt="WhatsApp" />
-              </a>
+              </a> */}
             </div>
           </div>
           <div className={classes.containerBlockRight}>

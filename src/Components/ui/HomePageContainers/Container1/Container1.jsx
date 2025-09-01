@@ -123,15 +123,12 @@ export default function Container1() {
         <div className={classes.containerBlockTitle}>
           <span className={classes.title}>ФУТБОЛЬНЫЙ КЛУБ «НАРТ»</span>
           <div className={classes.containerBlockTopRight}>
-            <span>
+            <a href="https://t.me/fc_nart_cherkessk">
               <img src={'../images/nartBlackTg.svg'} />
-            </span>
-            <span>
+            </a>
+            <a href="https://vk.com/fcnart2010">
               <img src={'../images/nartBlackVk.svg'} />
-            </span>
-            <span>
-              <img src={'../images/nartBlackWa.svg'} />
-            </span>
+            </a>
           </div>
         </div>
         <div className={classes.containerBlockLeft}>

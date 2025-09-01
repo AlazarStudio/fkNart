@@ -105,7 +105,7 @@ export default function Container3() {
           })}
         </div>
 
-        {/* Видео */}
+      
         <div className={classes.containerBlockTitle}>
           <span>ВИДЕО</span>
           <span onClick={() => navigate('/videos')}>Все видео</span>

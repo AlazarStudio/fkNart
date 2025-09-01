@@ -60,6 +60,11 @@ export default function Container2() {
 
   return (
     <div className={classes.container}>
+      <div className={classes.containerImg}>
+        <a href="https://leon.ru">
+          <img src="../images/topNart.png" />
+        </a>
+      </div>
       <div className={classes.containerBlock}>
         <div className={classes.containerBlockLeft}>
           <span className={classes.containerBlockLeftTitle}>

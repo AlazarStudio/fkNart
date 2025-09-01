@@ -1,5 +1,5 @@
 import React from 'react';
-import { Admin, Resource } from 'react-admin';
+import { Admin, Resource, Layout, Menu } from 'react-admin';
 import simpleRestProvider from 'ra-data-simple-rest';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
 import russianMessages from 'ra-language-russian';
@@ -9,7 +9,6 @@ import authProvider from './JS/authProvider';
 import { fetchJsonWithToken } from './JS/fetchJsonWithToken';
 
 import LoginPage from './LoginPage';
-import CustomLayout from './CustomLayout';
 
 import {
   LeagueCreate,
@@ -40,8 +39,56 @@ import {
 } from './Resourses/PlayerStatResource';
 import { NewsCreate, NewsEdit, NewsList } from './Resourses/NewsResource';
 
+// MUI для пункта меню-ссылки
+import LaunchIcon from '@mui/icons-material/Launch';
+import {
+  Divider,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
+
+// ===== i18n прямо здесь =====
+const ru = {
+  ...russianMessages,
+  auth: {
+    ...russianMessages.auth,
+    invalid_credentials: 'Неправильное имя пользователя или пароль',
+    user_exists: 'Пользователь уже существует',
+  },
+  custom: { saved: 'Сохранено' },
+};
+
 const dataProvider = simpleRestProvider(`${serverConfig}`, fetchJsonWithToken);
-const i18nProvider = polyglotI18nProvider(() => russianMessages, 'ru');
+const i18nProvider = polyglotI18nProvider(() => ru, 'ru', {
+  allowMissing: true,
+});
+
+// URL публичного сайта
+const PUBLIC_SITE_URL = '/';
+
+// Кастомное меню: сначала все ресурсы, ниже — кнопка-ссылка
+const CustomMenu = () => (
+  <Menu>
+    {/* автоматический список всех ресурсов */}
+    <Menu.ResourceItems />
+    <Divider sx={{ my: 1 }} />
+    <ListItemButton
+      component="a"
+      href={PUBLIC_SITE_URL}
+      target="_blank"
+      rel="noopener"
+    >
+      <ListItemIcon>
+        <LaunchIcon />
+      </ListItemIcon>
+      <ListItemText primary="Вернуться на сайт" />
+    </ListItemButton>
+  </Menu>
+);
+
+// Прокидываем меню в базовый Layout RA
+const LayoutWithMenu = (props) => <Layout {...props} menu={CustomMenu} />;
 
 const AdminPage = () => (
   <Admin
@@ -49,7 +96,7 @@ const AdminPage = () => (
     dataProvider={dataProvider}
     i18nProvider={i18nProvider}
     authProvider={authProvider}
-    layout={CustomLayout}
+    layout={LayoutWithMenu}
     loginPage={<LoginPage />}
   >
     <Resource

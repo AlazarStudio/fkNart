@@ -92,7 +92,7 @@ function Header() {
                   alt="VK"
                 />
               </a>
-              <a
+              {/* <a
                 href="https://wa.me/79000000000" // укажи реальный номер WhatsApp
                 target="_blank"
                 rel="noopener noreferrer"
@@ -108,7 +108,7 @@ function Header() {
                   }
                   alt="WhatsApp"
                 />
-              </a>
+              </a> */}
             </div>
           </div>
 
@@ -185,12 +185,12 @@ function Header() {
                 >
                   Telegram
                 </a>
-                <a href="#" rel="noreferrer">
+                <a href="https://vk.com/fcnart2010" rel="noreferrer">
                   VK
                 </a>
-                <a href="#" rel="noreferrer">
+                {/* <a href="#" rel="noreferrer">
                   WhatsApp
-                </a>
+                </a> */}
               </div>
             </div>
           </div>
