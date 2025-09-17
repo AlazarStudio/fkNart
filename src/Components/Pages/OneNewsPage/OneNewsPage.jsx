@@ -87,6 +87,7 @@ export default function OneNewsPage() {
                 {new Date(news.date).toLocaleDateString('ru-RU')}
               </p>
               <h1 className={classes.oneNewsTitle}>{news.title}</h1>
+
               {news?.images?.[0] && (
                 <img
                   src={`${uploadsConfig}${news.images[0]}`}
@@ -94,9 +95,12 @@ export default function OneNewsPage() {
                   className={classes.newsImage}
                 />
               )}
-              <div className={classes.oneNewsDescription}>
-                <p>{news.description}</p>
-              </div>
+
+              {/* вот здесь */}
+              <div
+                className={classes.oneNewsDescription}
+                dangerouslySetInnerHTML={{ __html: news.description || '' }}
+              />
             </>
           ) : (
             <div>Новость не найдена</div>

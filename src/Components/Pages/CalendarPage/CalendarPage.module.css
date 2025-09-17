@@ -73,8 +73,8 @@
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 12px 14px;
-  gap: 12px;
-  width: 655px;
+  /* gap: 12px; */
+  width: 800px;
   cursor: pointer;
 }
 
@@ -127,9 +127,10 @@
 /* center */
 .colScore {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
+  /* align-items: center; */
+  /* justify-content: center; */
+  gap: 10px;
+  /* outline: 1px solid red; */
 }
 
 .logo,
@@ -150,9 +151,16 @@
 }
 
 .score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   font-size: 28px;
   font-weight: 800;
   line-height: 1;
+  margin-top: 35px;
+  height: 30px;
+  flex-wrap: nowrap;
 }
 
 /* right */
@@ -227,6 +235,7 @@
   grid-template-columns: 40px 1fr 50px 15px;
   /* align-items: center; */
   padding: 10px 15px;
+  border-bottom: 1px solid #c5c6c6;
 }
 
 .standingRow:hover {
@@ -243,11 +252,34 @@
 .standingRow:nth-child(even) {
 }
 
-.teamName {
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.teamName1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
   gap: 9px;
+  width: 200px;
+
+  margin-top: 5px;
+  /* outline: 1px solid red; */
+}
+
+.teamName {
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  text-align: start;
+  gap: 9px;
+  width: 200px;
+
+  /* margin-top: 5px; */
+  /* outline: 1px solid red; */
 }
 
 .teamName img {

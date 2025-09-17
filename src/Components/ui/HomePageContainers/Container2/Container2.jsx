@@ -81,7 +81,10 @@ export default function Container2() {
                 <img src={`${uploadsConfig}${news.images[0]}`} alt="home" />
                 <div className={classes.containerBlockLeftNewsCardBottom}>
                   <span>{news.title}</span>
-                  <span>{news.description}</span>
+                  <div
+                    className={classes.cardDesc}
+                    dangerouslySetInnerHTML={{ __html: news.description || '' }}
+                  />
                   <div className={classes.containerBlockLeftNewsCardBottomDate}>
                     <span>
                       {new Date(news.date).toLocaleDateString('ru-RU')}

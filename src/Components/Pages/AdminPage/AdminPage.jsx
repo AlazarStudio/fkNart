@@ -47,6 +47,16 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
+import {
+  StadiumCreate,
+  StadiumEdit,
+  StadiumList,
+} from './Resourses/StadiumResource';
+import {
+  RefereeCreate,
+  RefereeEdit,
+  RefereeList,
+} from './Resourses/RefereeResource';
 
 // ===== i18n прямо здесь =====
 const ru = {
@@ -107,6 +117,18 @@ const AdminPage = () => (
       edit={LeagueEdit}
     />
     <Resource
+      name="stadiums"
+      list={StadiumList}
+      create={StadiumCreate}
+      edit={StadiumEdit}
+    />
+    <Resource
+      name="referees"
+      list={RefereeList}
+      create={RefereeCreate}
+      edit={RefereeEdit}
+    />
+    <Resource
       name="leagueStandings"
       options={{ label: 'Турнирная таблица' }}
       list={LeagueStandingList}
@@ -134,13 +156,13 @@ const AdminPage = () => (
       create={MatchCreate}
       edit={MatchEdit}
     />
-    <Resource
+    {/* <Resource
       name="matchEvents"
       options={{ label: 'События матча' }}
       list={MatchEventList}
       create={MatchEventCreate}
       edit={MatchEventEdit}
-    />
+    /> */}
     <Resource
       name="playerStats"
       options={{ label: 'Статистика игроков' }}

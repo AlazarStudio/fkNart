@@ -27,6 +27,7 @@
     "jszip": "^3.10.1",
     "jwt-decode": "^4.0.0",
     "multer": "^2.0.1",
+    "quill": "^2.0.2",
     "ra-core": "^5.3.4",
     "ra-data-fakerest": "^5.9.1",
     "ra-data-json-server": "^5.3.4",

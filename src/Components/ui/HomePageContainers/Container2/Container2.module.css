@@ -504,3 +504,30 @@ button:hover {
   button:hover {
   }
 }
+
+
+
+/* базовая типографика для HTML из Quill */
+.cardDesc :global(p) {
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.cardDesc :global(ul),
+.cardDesc :global(ol) {
+  margin: 0 0 10px;
+  padding-left: 1.2rem;
+}
+.cardDesc :global(blockquote) {
+  margin: 10px 0;
+  padding-left: 12px;
+  border-left: 3px solid rgba(0,0,0,.1);
+  color: #666;
+}
+
+/* вариант: ограничить превью по высоте и обрезать лишнее */
+.cardDesc {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;     /* покажет ~3 строки */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

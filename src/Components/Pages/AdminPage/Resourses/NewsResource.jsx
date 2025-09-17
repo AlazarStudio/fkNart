@@ -18,6 +18,8 @@ import {
 import { handleSaveWithImages } from '../JS/fileUploadUtils';
 import uploadsConfig from '../../../../uploadsConfig';
 
+import ReactQuillInput from './ReactQuillInput';
+
 // ✅ Список новостей
 export const NewsList = (props) => (
   <List {...props}>
@@ -41,15 +43,12 @@ export const NewsCreate = (props) => (
   <Create {...props} transform={handleSaveWithImages}>
     <SimpleForm>
       <TextInput source="title" label="Заголовок" fullWidth />
-      <TextInput source="description" label="Описание" multiline fullWidth />
-      <DateInput source="date" label="Дата" />
 
-      <ImageInput
-        source="imagesRaw"
-        label="Изображения"
-        multiple
-        accept="image/*"
-      >
+      {/* было: <TextInput source="description" multiline fullWidth /> */}
+      <ReactQuillInput source="description" label="Описание" fullWidth />
+
+      <DateInput source="date" label="Дата" />
+      <ImageInput source="imagesRaw" label="Изображения" multiple accept="image/*">
         <ImageField source="src" title="title" />
       </ImageInput>
     </SimpleForm>
@@ -61,15 +60,12 @@ export const NewsEdit = (props) => (
   <Edit {...props} transform={handleSaveWithImages}>
     <SimpleForm>
       <TextInput source="title" label="Заголовок" fullWidth />
-      <TextInput source="description" label="Описание" multiline fullWidth />
-      <DateInput source="date" label="Дата" />
 
-      <ImageInput
-        source="imagesRaw"
-        label="Новые изображения"
-        multiple
-        accept="image/*"
-      >
+      {/* было: <TextInput source="description" multiline fullWidth /> */}
+      <ReactQuillInput source="description" label="Описание" fullWidth />
+
+      <DateInput source="date" label="Дата" />
+      <ImageInput source="imagesRaw" label="Новые изображения" multiple accept="image/*">
         <ImageField source="src" title="title" />
       </ImageInput>
 

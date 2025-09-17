@@ -10,17 +10,20 @@ export default function Container4() {
           <a href="https://leon.ru">
             <img src="../images/leonBlack.png" />
           </a>
+          <a href="https://abinbevefes.ru/">
+            <img src="../images/abinbevefes.ru logo9.svg" />
+          </a>
           <a href="https://bookmaker-ratings.ru/bookmakers-homepage/luchshie-bukmekerskie-kontory/">
             <img src="../images/rb1.png" />
           </a>
           <a href="https://metaratings.ru/">
             <img src="../images/meta1.png" />
           </a>
-          <a href="https://legalbet.ru/">
+          <a href="https://legalbet.ru/ratings/">
             <img src="../images/legalRed.png" />
           </a>
           <a href="https://betonmobile.ru/">
-            <img src="../images/betonBlack.png" />
+            <img src="../images/бетон.png" />
           </a>
           <a href="https://www.sportmaster.ru/?utm_source=fnl&utm_medium=partnership&utm_campaign=fnl_site&utm_content=fnl_footer">
             <img src="../images/sport1.png" />

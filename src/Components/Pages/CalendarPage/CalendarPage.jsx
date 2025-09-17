@@ -306,7 +306,7 @@ export default function CalendarPage() {
                               ) : (
                                 <div className={classes.logoStub}>H</div>
                               )}
-                              <span className={classes.teamName}>
+                              <span className={classes.teamName1}>
                                 {m?.homeTeam?.title}
                               </span>
                             </div>
@@ -325,7 +325,7 @@ export default function CalendarPage() {
                               ) : (
                                 <div className={classes.logoStub}>G</div>
                               )}
-                              <span className={classes.teamName}>
+                              <span className={classes.teamName1}>
                                 {m?.guestTeam?.title}
                               </span>
                             </div>
