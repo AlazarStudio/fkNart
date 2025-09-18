@@ -29,6 +29,15 @@ const posRu = {
   KIT_MANAGER: 'Экипировщик',
 };
 
+const roleRu = {
+  MAIN: 'Главный судья',
+  ASSISTANT1: 'Ассистент 1',
+  ASSISTANT2: 'Ассистент 2',
+  FOURTH: 'Четвёртый судья',
+  VAR: 'VAR',
+  AVAR: 'AVAR',
+};
+
 function fmtHeaderDate(iso) {
   if (!iso) return '';
   const d = new Date(iso);
@@ -67,6 +76,28 @@ const PLAYER_POSITIONS = new Set([
 ]);
 const isPlayerPosition = (p) => (p && PLAYER_POSITIONS.has(p)) || false;
 
+// --- helpers для составов ---
+const startersFromParticipants = (participants, teamId) =>
+  (participants || [])
+    .filter((pm) => pm.role === 'STARTER' && pm.player?.teamId === teamId)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || a.id - b.id);
+
+const startersFromApi = (lineupsSide) =>
+  (lineupsSide?.starters || [])
+    .slice()
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || a.id - b.id);
+
+const mapStarter = (x) => {
+  const p = x.player || {};
+  return {
+    id: p.id,
+    name: p.name || `Игрок #${p.id}`,
+    number: p.number ?? null,
+    position: x.position || p.position || null,
+    isCaptain: !!x.isCaptain,
+  };
+};
+
 export default function MatchPage() {
   const { matchId } = useParams();
 
@@ -77,6 +108,7 @@ export default function MatchPage() {
   const [events, setEvents] = useState([]);
   const [homePlayers, setHomePlayers] = useState([]);
   const [guestPlayers, setGuestPlayers] = useState([]);
+  const [lineups, setLineups] = useState(null); // фоллбек на /lineups
   const [tab, setTab] = useState(TAB.EVENTS);
 
   // --------- ГАЛЕРЕЯ -----------
@@ -88,7 +120,6 @@ export default function MatchPage() {
   const openGallery = (i) => {
     setGalleryIndex(i);
     setGalleryOpen(true);
-    // запретить скролл фона
     document.body.style.overflow = 'hidden';
   };
   const closeGallery = () => {
@@ -104,7 +135,6 @@ export default function MatchPage() {
     setGalleryIndex((i) => (i - 1 + images.length) % images.length);
   };
 
-  // клавиатура
   useEffect(() => {
     const onKey = (e) => {
       if (!isGalleryOpen) return;
@@ -116,13 +146,12 @@ export default function MatchPage() {
     return () => window.removeEventListener('keydown', onKey);
   }, [isGalleryOpen]);
 
-  // свайпы
   const onTouchStart = (e) =>
     (touchStartX.current = e.changedTouches[0].clientX);
   const onTouchEnd = (e) => {
     touchEndX.current = e.changedTouches[0].clientX;
     const dx = touchEndX.current - touchStartX.current;
-    const threshold = 40; // пикселей
+    const threshold = 40;
     if (dx > threshold) prevImg();
     else if (dx < -threshold) nextImg();
   };
@@ -147,6 +176,20 @@ export default function MatchPage() {
         if (!m) throw new Error('Матч не найден');
         if (alive) setMatch(m);
 
+        // если participants пуст — подтянем lineups фоллбеком
+        try {
+          if (!m?.participants?.length) {
+            const lr = await axios.get(
+              `${serverConfig}/matches/${matchId}/lineups`
+            );
+            if (alive) setLineups(lr.data);
+          } else {
+            if (alive) setLineups(null);
+          }
+        } catch {
+          if (alive) setLineups(null);
+        }
+
         // события
         try {
           const evR = await axios.get(`${serverConfig}/matchEvents`, {
@@ -164,7 +207,7 @@ export default function MatchPage() {
           if (alive) setEvents([]);
         }
 
-        // составы
+        // (опционально) игроки команд
         const hp = m?.homeTeamId
           ? axios.get(`${serverConfig}/players`, {
               params: {
@@ -195,20 +238,33 @@ export default function MatchPage() {
     };
   }, [matchId]);
 
-  const homeSquad = useMemo(
-    () =>
-      homePlayers
-        .filter((p) => isPlayerPosition(p.position))
-        .sort((a, b) => (a.number ?? 0) - (b.number ?? 0)),
-    [homePlayers]
-  );
-  const guestSquad = useMemo(
-    () =>
-      guestPlayers
-        .filter((p) => isPlayerPosition(p.position))
-        .sort((a, b) => (a.number ?? 0) - (b.number ?? 0)),
-    [guestPlayers]
-  );
+  // стартовые составы
+  const homeStarters = useMemo(() => {
+    if (!match) return [];
+    if (match.participants?.length) {
+      return startersFromParticipants(match.participants, match.homeTeamId).map(
+        mapStarter
+      );
+    }
+    if (lineups?.home) {
+      return startersFromApi(lineups.home).map(mapStarter);
+    }
+    return [];
+  }, [match, lineups]);
+
+  const guestStarters = useMemo(() => {
+    if (!match) return [];
+    if (match.participants?.length) {
+      return startersFromParticipants(
+        match.participants,
+        match.guestTeamId
+      ).map(mapStarter);
+    }
+    if (lineups?.guest) {
+      return startersFromApi(lineups.guest).map(mapStarter);
+    }
+    return [];
+  }, [match, lineups]);
 
   const headerHalfScore = useMemo(() => {
     if (!events?.length || !match) return null;
@@ -342,11 +398,11 @@ export default function MatchPage() {
 
             <div className={classes.scoreRow}>
               <div className={classes.teamBox}>
-                <img
+                {/* <img
                   src={homeImages}
                   alt={match?.homeTeam?.title}
                   className={classes.img}
-                />
+                /> */}
                 <div className={classes.teamBoxBottom}>
                   {homeLogo ? (
                     <img src={homeLogo} alt={match?.homeTeam?.title} />
@@ -372,11 +428,11 @@ export default function MatchPage() {
               </div>
 
               <div className={classes.teamBox}>
-                <img
+                {/* <img
                   src={guestImages}
                   alt={match?.guestTeam?.title}
                   className={classes.img}
-                />
+                /> */}
                 <div className={classes.teamBoxBottom}>
                   {guestLogo ? (
                     <img src={guestLogo} alt={match?.guestTeam?.title} />
@@ -396,25 +452,33 @@ export default function MatchPage() {
         <div className={classes.tabs}>
           <button
             onClick={() => setTab(TAB.PROTOCOL)}
-            className={tab === TAB.PROTOCOL ? 'active' : ''}
+            className={`${classes.tabBtn} ${
+              tab === TAB.PROTOCOL ? classes.tabActive : ''
+            }`}
           >
             ПРОТОКОЛ
           </button>
           <button
             onClick={() => setTab(TAB.EVENTS)}
-            className={tab === TAB.EVENTS ? 'active' : ''}
+            className={`${classes.tabBtn} ${
+              tab === TAB.EVENTS ? classes.tabActive : ''
+            }`}
           >
             СОБЫТИЯ
           </button>
           <button
             onClick={() => setTab(TAB.PHOTO)}
-            className={tab === TAB.PHOTO ? 'active' : ''}
+            className={`${classes.tabBtn} ${
+              tab === TAB.PHOTO ? classes.tabActive : ''
+            }`}
           >
             ФОТО
           </button>
           <button
             onClick={() => setTab(TAB.VIDEO)}
-            className={tab === TAB.VIDEO ? 'active' : ''}
+            className={`${classes.tabBtn} ${
+              tab === TAB.VIDEO ? classes.tabActive : ''
+            }`}
           >
             ВИДЕО
           </button>
@@ -440,13 +504,15 @@ export default function MatchPage() {
                   </span>
                 </div>
 
-                {homeSquad.length > 0 ? (
-                  homeSquad.map((p) => (
+                {homeStarters.length > 0 ? (
+                  homeStarters.map((p) => (
                     <div key={p.id} className={classes.playerRow}>
                       <span className={classes.shirt}>{p.number ?? '-'}</span>
-                      <span className={classes.pname}>{p.name}</span>
+                      <span className={classes.pname}>
+                        {p.name} {p.isCaptain ? ' (C)' : ''}
+                      </span>
                       <span className={classes.ppos}>
-                        {posRu[p.position] || p.position}
+                        {posRu[p.position] || p.position || '—'}
                       </span>
                     </div>
                   ))
@@ -467,13 +533,15 @@ export default function MatchPage() {
                   </span>
                 </div>
 
-                {guestSquad.length > 0 ? (
-                  guestSquad.map((p) => (
+                {guestStarters.length > 0 ? (
+                  guestStarters.map((p) => (
                     <div key={p.id} className={classes.playerRow}>
                       <span className={classes.shirt}>{p.number ?? '-'}</span>
-                      <span className={classes.pname}>{p.name}</span>
+                      <span className={classes.pname}>
+                        {p.name} {p.isCaptain ? ' (C)' : ''}
+                      </span>
                       <span className={classes.ppos}>
-                        {posRu[p.position] || p.position}
+                        {posRu[p.position] || p.position || '—'}
                       </span>
                     </div>
                   ))
@@ -482,6 +550,30 @@ export default function MatchPage() {
                 )}
               </div>
             </div>
+
+            {/* ---- REFEREES ---- */}
+            {Array.isArray(match.matchReferees) &&
+              match.matchReferees.length > 0 && (
+                <div className={classes.refereesBlock}>
+                  <div className={classes.protoTitle}>СУДЕЙСКАЯ БРИГАДА</div>
+
+                  {/* рисуем список как у состава */}
+                  <div className={classes.refListLikeSquad}>
+                    {match.matchReferees.map((mr) => (
+                      <div key={mr.id} className={classes.playerRow1}>
+                        {/* в “номер” ставим тире — можно заменить на №, свисток и т.п. */}
+                        <span className={classes.shirt}>—</span>
+                        <span className={classes.pname}>
+                          {mr.referee?.name || '—'}
+                        </span>
+                        <span className={classes.ppos}>
+                          {roleRu[mr.role] || mr.role}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
           </div>
         )}
 
@@ -621,7 +713,6 @@ export default function MatchPage() {
           <div
             className={classes.lightboxOverlay}
             onClick={(e) => {
-              // клик по фону закрывает, но не по контенту
               if (e.target === e.currentTarget) closeGallery();
             }}
           >

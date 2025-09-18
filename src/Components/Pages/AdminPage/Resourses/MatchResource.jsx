@@ -9,7 +9,6 @@ import {
   DeleteButton,
   Create,
   Edit,
-  SimpleForm,
   TextInput,
   NumberInput,
   DateTimeInput,
@@ -21,11 +20,14 @@ import {
   ArrayInput,
   SimpleFormIterator,
   FormDataConsumer,
+  TabbedForm,
+  FormTab,
+  useGetMany,
 } from 'react-admin';
 
 import uploadsConfig from '../../../../uploadsConfig';
-import { useGetMany } from 'react-admin';
 import { handleSaveWithImagesAndVideos } from '../JS/fileUploadUtils';
+import LineupSection from './LineupSection';
 
 const statusChoices = [
   { id: 'SCHEDULED', name: 'Запланирован' },
@@ -89,7 +91,7 @@ export const MatchList = (props) => (
   </List>
 );
 
-// --- Вспомогательные селекты для событий ---
+// --- вспомогательные селекты для событий ---
 const TeamSelectLimited = ({ source }) => (
   <FormDataConsumer>
     {({ formData, getSource }) => {
@@ -129,14 +131,13 @@ const PlayerSelectByTeam = ({ source, teamField = 'teamId' }) => (
   </FormDataConsumer>
 );
 
-// --- Поля формы матча ---
+// --- базовые поля формы матча ---
 const MatchFormFields = () => (
   <>
     <ReferenceInput source="leagueId" reference="leagues" label="Лига">
       <SelectInput optionText="title" />
     </ReferenceInput>
 
-    {/* Новый справочник стадионов */}
     <ReferenceInput
       source="stadiumId"
       reference="stadiums"
@@ -151,8 +152,6 @@ const MatchFormFields = () => (
         parse={(v) => (v == null ? null : Number(v))}
       />
     </ReferenceInput>
-
-    {/* Старое строковое поле — можно удалить когда полностью перейдёшь на stadiumId */}
 
     <DateTimeInput source="date" label="Дата" />
 
@@ -235,7 +234,7 @@ const MatchFormFields = () => (
       <ImageField source="src" title="title" />
     </ImageInput>
 
-    {/* ----- Судьи матча (массив с ролями) ----- */}
+    {/* ----- Судьи матча ----- */}
     <ArrayInput source="matchReferees" label="Судейская бригада">
       <SimpleFormIterator inline getItemLabel={(idx) => `Судья #${idx + 1}`}>
         <ReferenceInput
@@ -281,16 +280,26 @@ const MatchFormFields = () => (
 
 export const MatchCreate = (props) => (
   <Create {...props} transform={handleSaveWithImagesAndVideos}>
-    <SimpleForm>
-      <MatchFormFields />
-    </SimpleForm>
+    <TabbedForm>
+      <FormTab label="Матч">
+        <MatchFormFields />
+      </FormTab>
+      <FormTab label="Составы">
+        <LineupSection />
+      </FormTab>
+    </TabbedForm>
   </Create>
 );
 
 export const MatchEdit = (props) => (
   <Edit {...props} transform={handleSaveWithImagesAndVideos}>
-    <SimpleForm>
-      <MatchFormFields />
-    </SimpleForm>
+    <TabbedForm>
+      <FormTab label="Матч">
+        <MatchFormFields />
+      </FormTab>
+      <FormTab label="Составы">
+        <LineupSection />
+      </FormTab>
+    </TabbedForm>
   </Edit>
 );

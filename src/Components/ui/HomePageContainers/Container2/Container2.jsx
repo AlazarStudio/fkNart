@@ -68,7 +68,8 @@ export default function Container2() {
       <div className={classes.containerBlock}>
         <div className={classes.containerBlockLeft}>
           <span className={classes.containerBlockLeftTitle}>
-            НОВОСТИ{' '}
+            <span> НОВОСТИ</span>
+
             <button onClick={() => navigate('/news')}>Все новости</button>
           </span>
           <div className={classes.containerBlockLeftNews}>
