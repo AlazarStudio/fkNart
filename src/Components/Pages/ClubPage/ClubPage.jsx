@@ -41,6 +41,12 @@ export default function ClubPage() {
     'TEAM_MANAGER',
     'MASSEUR',
     'KIT_MANAGER',
+    'GENERAL_DIRECTOR',
+    'SPORTS_DIRECTOR',
+    'DEPUTY_GENERAL_DIRECTOR',
+    'MEDIA_OFFICER',
+    'SECURITY_OFFICER',
+    'FAN_LIAISON',
   ];
 
   const posRu = {
@@ -58,6 +64,12 @@ export default function ClubPage() {
     TEAM_MANAGER: 'Администратор',
     MASSEUR: 'Массажист',
     KIT_MANAGER: 'Экипировщик',
+    GENERAL_DIRECTOR: 'Генеральный директор',
+    SPORTS_DIRECTOR: 'Спортивный директор',
+    DEPUTY_GENERAL_DIRECTOR: 'Зам. ген. директора',
+    MEDIA_OFFICER: 'Сотрудник по работе со СМИ',
+    SECURITY_OFFICER: 'Сотрудник по безопасности',
+    FAN_LIAISON: 'Сотрудник по работе с болельщиками',
   };
   const posToRu = (p) => posRu[p] || p || '—';
   const norm = (s) => (s ?? '').toString().trim().toLocaleLowerCase('ru-RU');

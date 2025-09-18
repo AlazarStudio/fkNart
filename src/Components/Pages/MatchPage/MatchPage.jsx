@@ -486,95 +486,105 @@ export default function MatchPage() {
 
         {/* CONTENT */}
         {tab === TAB.PROTOCOL && (
-          <div className={classes.protocolCard}>
-            <div className={classes.protocolHeader}>
-              <div className={classes.protoTitle}>СТАРТОВЫЕ СОСТАВЫ</div>
-            </div>
-
-            <div className={classes.protocolGrid}>
-              <div className={classes.col}>
-                <div className={classes.colHead}>
-                  {homeLogo ? (
-                    <img src={homeLogo} alt="" />
-                  ) : (
-                    <div className={classes.logoStub}>H</div>
-                  )}
-                  <span className={classes.colTitle}>
-                    {match?.homeTeam?.title}
-                  </span>
-                </div>
-
-                {homeStarters.length > 0 ? (
-                  homeStarters.map((p) => (
-                    <div key={p.id} className={classes.playerRow}>
-                      <span className={classes.shirt}>{p.number ?? '-'}</span>
-                      <span className={classes.pname}>
-                        {p.name} {p.isCaptain ? ' (C)' : ''}
-                      </span>
-                      <span className={classes.ppos}>
-                        {posRu[p.position] || p.position || '—'}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <div className={classes.empty}>Нет данных по составу</div>
-                )}
+          <>
+            {/* <div className={classes.protoActions}>
+              <button
+                className={classes.downloadBtn}
+                onClick={() => window.print()}
+              >
+                Скачать протокол (PDF)
+              </button>
+            </div> */}
+            <div className={classes.protocolCard}>
+              <div className={classes.protocolHeader}>
+                <div className={classes.protoTitle}>СТАРТОВЫЕ СОСТАВЫ</div>
               </div>
 
-              <div className={classes.col}>
-                <div className={classes.colHead}>
-                  {guestLogo ? (
-                    <img src={guestLogo} alt="" />
-                  ) : (
-                    <div className={classes.logoStub}>G</div>
-                  )}
-                  <span className={classes.colTitle}>
-                    {match?.guestTeam?.title}
-                  </span>
-                </div>
+              <div className={classes.protocolGrid}>
+                <div className={classes.col}>
+                  <div className={classes.colHead}>
+                    {homeLogo ? (
+                      <img src={homeLogo} alt="" />
+                    ) : (
+                      <div className={classes.logoStub}>H</div>
+                    )}
+                    <span className={classes.colTitle}>
+                      {match?.homeTeam?.title}
+                    </span>
+                  </div>
 
-                {guestStarters.length > 0 ? (
-                  guestStarters.map((p) => (
-                    <div key={p.id} className={classes.playerRow}>
-                      <span className={classes.shirt}>{p.number ?? '-'}</span>
-                      <span className={classes.pname}>
-                        {p.name} {p.isCaptain ? ' (C)' : ''}
-                      </span>
-                      <span className={classes.ppos}>
-                        {posRu[p.position] || p.position || '—'}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <div className={classes.empty}>Нет данных по составу</div>
-                )}
-              </div>
-            </div>
-
-            {/* ---- REFEREES ---- */}
-            {Array.isArray(match.matchReferees) &&
-              match.matchReferees.length > 0 && (
-                <div className={classes.refereesBlock}>
-                  <div className={classes.protoTitle}>СУДЕЙСКАЯ БРИГАДА</div>
-
-                  {/* рисуем список как у состава */}
-                  <div className={classes.refListLikeSquad}>
-                    {match.matchReferees.map((mr) => (
-                      <div key={mr.id} className={classes.playerRow1}>
-                        {/* в “номер” ставим тире — можно заменить на №, свисток и т.п. */}
-                        <span className={classes.shirt}>—</span>
+                  {homeStarters.length > 0 ? (
+                    homeStarters.map((p) => (
+                      <div key={p.id} className={classes.playerRow}>
+                        <span className={classes.shirt}>{p.number ?? '-'}</span>
                         <span className={classes.pname}>
-                          {mr.referee?.name || '—'}
+                          {p.name} {p.isCaptain ? ' (C)' : ''}
                         </span>
                         <span className={classes.ppos}>
-                          {roleRu[mr.role] || mr.role}
+                          {posRu[p.position] || p.position || '—'}
                         </span>
                       </div>
-                    ))}
-                  </div>
+                    ))
+                  ) : (
+                    <div className={classes.empty}>Нет данных по составу</div>
+                  )}
                 </div>
-              )}
-          </div>
+
+                <div className={classes.col}>
+                  <div className={classes.colHead}>
+                    {guestLogo ? (
+                      <img src={guestLogo} alt="" />
+                    ) : (
+                      <div className={classes.logoStub}>G</div>
+                    )}
+                    <span className={classes.colTitle}>
+                      {match?.guestTeam?.title}
+                    </span>
+                  </div>
+
+                  {guestStarters.length > 0 ? (
+                    guestStarters.map((p) => (
+                      <div key={p.id} className={classes.playerRow}>
+                        <span className={classes.shirt}>{p.number ?? '-'}</span>
+                        <span className={classes.pname}>
+                          {p.name} {p.isCaptain ? ' (C)' : ''}
+                        </span>
+                        <span className={classes.ppos}>
+                          {posRu[p.position] || p.position || '—'}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className={classes.empty}>Нет данных по составу</div>
+                  )}
+                </div>
+              </div>
+
+              {/* ---- REFEREES ---- */}
+              {Array.isArray(match.matchReferees) &&
+                match.matchReferees.length > 0 && (
+                  <div className={classes.refereesBlock}>
+                    <div className={classes.protoTitle}>СУДЕЙСКАЯ БРИГАДА</div>
+
+                    {/* рисуем список как у состава */}
+                    <div className={classes.refListLikeSquad}>
+                      {match.matchReferees.map((mr) => (
+                        <div key={mr.id} className={classes.playerRow1}>
+                          {/* в “номер” ставим тире — можно заменить на №, свисток и т.п. */}
+                          <span className={classes.shirt}>—</span>
+                          <span className={classes.pname}>
+                            {mr.referee?.name || '—'}
+                          </span>
+                          <span className={classes.ppos}>
+                            {roleRu[mr.role] || mr.role}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+            </div>
+          </>
         )}
 
         {tab === TAB.EVENTS && (

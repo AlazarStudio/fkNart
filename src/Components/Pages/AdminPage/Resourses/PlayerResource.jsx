@@ -16,12 +16,12 @@ import {
   ImageInput,
   ImageField,
   FunctionField,
-  AutocompleteInput, // ⬅️ добавили
+  AutocompleteInput,
 } from 'react-admin';
 import { handleSaveWithImages } from '../JS/fileUploadUtils';
 import uploadsConfig from '../../../../uploadsConfig';
 
-// === Разделённые списки ===
+// --- Игровые позиции
 const playerPositions = [
   { id: 'GOALKEEPER', name: 'Вратарь' },
   { id: 'DEFENDER', name: 'Защитник' },
@@ -29,6 +29,7 @@ const playerPositions = [
   { id: 'FORWARD', name: 'Нападающий' },
 ];
 
+// --- Штаб (старые роли + НОВЫЕ В КОНЦЕ)
 const staffRoles = [
   { id: 'HEAD_COACH', name: 'Главный тренер' },
   { id: 'ASSISTANT_COACH', name: 'Тренер/ассистент' },
@@ -40,21 +41,30 @@ const staffRoles = [
   { id: 'TEAM_MANAGER', name: 'Администратор команды' },
   { id: 'MASSEUR', name: 'Массажист' },
   { id: 'KIT_MANAGER', name: 'Экипировщик' },
+  // --- новые роли (в самом НИЗУ):
+  { id: 'GENERAL_DIRECTOR', name: 'Генеральный директор' },
+  { id: 'SPORTS_DIRECTOR', name: 'Спортивный директор' },
+  { id: 'DEPUTY_GENERAL_DIRECTOR', name: 'Заместитель генерального директора' },
+  { id: 'MEDIA_OFFICER', name: 'Сотрудник клуба по работе со СМИ' },
+  {
+    id: 'SECURITY_OFFICER',
+    name: 'Сотрудник клуба по обеспечению безопасности',
+  },
+  { id: 'FAN_LIAISON', name: 'Сотрудник по работе с болельщиками' },
 ];
 
-// Для отображения названия позиции в списке
+// карта для отображения в списке
 const positionsMap = [...playerPositions, ...staffRoles].reduce(
   (acc, p) => ((acc[p.id] = p.name), acc),
   {}
 );
 
-// Объединяем и помечаем группу (для группировки в селекте)
+// группированный список для селекта
 const groupedPositions = [
   ...playerPositions.map((p) => ({ ...p, group: 'Игроки' })),
   ...staffRoles.map((p) => ({ ...p, group: 'Тренерский штаб' })),
 ];
 
-// 📌 Список игроков/сотрудников
 export const PlayerList = (props) => (
   <List {...props}>
     <Datagrid rowClick="edit">
@@ -75,13 +85,11 @@ export const PlayerList = (props) => (
   </List>
 );
 
-// 📌 Создание
 export const PlayerCreate = (props) => (
   <Create {...props} transform={handleSaveWithImages}>
     <SimpleForm>
       <TextInput source="name" label="Имя" fullWidth />
 
-      {/* Группированный селект: Игроки / Тренерский штаб */}
       <AutocompleteInput
         source="position"
         label="Позиция / Роль"
@@ -92,7 +100,14 @@ export const PlayerCreate = (props) => (
         options={{ groupBy: (choice) => choice.group }}
       />
 
-      <NumberInput source="number" label="Номер" />
+      <NumberInput
+        source="number"
+        label="Номер"
+        parse={(v) =>
+          v === '' || v === undefined || v === null ? null : Number(v)
+        }
+      />
+
       <DateInput source="birthDate" label="Дата рождения" />
 
       <ReferenceInput source="teamId" reference="teams" label="Команда">
@@ -106,13 +121,11 @@ export const PlayerCreate = (props) => (
   </Create>
 );
 
-// 📌 Редактирование
 export const PlayerEdit = (props) => (
   <Edit {...props} transform={handleSaveWithImages}>
     <SimpleForm>
       <TextInput source="name" label="Имя" fullWidth />
 
-      {/* Группированный селект: Игроки / Тренерский штаб */}
       <AutocompleteInput
         source="position"
         label="Позиция / Роль"
@@ -123,7 +136,14 @@ export const PlayerEdit = (props) => (
         options={{ groupBy: (choice) => choice.group }}
       />
 
-      <NumberInput source="number" label="Номер" />
+      <NumberInput
+        source="number"
+        label="Номер"
+        parse={(v) =>
+          v === '' || v === undefined || v === null ? null : Number(v)
+        }
+      />
+
       <DateInput source="birthDate" label="Дата рождения" />
 
       <ReferenceInput source="teamId" reference="teams" label="Команда">

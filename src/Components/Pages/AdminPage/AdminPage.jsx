@@ -118,12 +118,14 @@ const AdminPage = () => (
     />
     <Resource
       name="stadiums"
+      options={{ label: 'Стадионы' }}
       list={StadiumList}
       create={StadiumCreate}
       edit={StadiumEdit}
     />
     <Resource
       name="referees"
+      options={{ label: 'Судьи' }}
       list={RefereeList}
       create={RefereeCreate}
       edit={RefereeEdit}
