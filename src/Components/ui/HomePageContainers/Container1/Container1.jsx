@@ -9,8 +9,8 @@ export default function Container1() {
   const navigate = useNavigate();
 
   const [matches, setMatches] = useState([]);
-  const [type, setType] = useState('SCHEDULED'); // ✅ по умолчанию будущие
-  const [index, setIndex] = useState(0);
+  const [type, setType] = useState('SCHEDULED'); // по умолчанию будущие
+  const [index, setIndex] = useState(0); // может расти бесконечно
   const [isAnimating, setIsAnimating] = useState(false);
   const [perPage, setPerPage] = useState(window.innerWidth <= 768 ? 1 : 3);
   const [paused, setPaused] = useState(false);
@@ -32,11 +32,11 @@ export default function Container1() {
   useEffect(() => {
     axios
       .get(`${serverConfig}/matches`)
-      .then((res) => setMatches(res.data))
+      .then((res) => setMatches(Array.isArray(res.data) ? res.data : []))
       .catch((err) => console.error('Ошибка загрузки матчей:', err));
   }, []);
 
-  // ---------- фильтрация (надёжная) ----------
+  // ---------- фильтрация ----------
   const filtered = useMemo(() => {
     const nowTs = Date.now();
 
@@ -78,7 +78,7 @@ export default function Container1() {
     );
   };
 
-  // ---------- строим слайды: клоны слева и справа всегда есть (даже если 1 карточка) ----------
+  // ---------- клоны (всегда есть, даже при 1 карточке) ----------
   const slides = useMemo(() => {
     if (total === 0) return [];
     const left = circularSlice(
@@ -90,28 +90,37 @@ export default function Container1() {
     return [...left, ...filtered, ...right];
   }, [filtered, perPage, total]);
 
+  // стартовая визуальная позиция — сразу на «реальных»
   const startIndex = useMemo(
     () => (total === 0 ? 0 : perPage),
     [perPage, total]
   );
-  const maxRealIndex = useMemo(
-    () => (total === 0 ? 0 : perPage + total - 1),
-    [perPage, total]
-  );
 
-  // ---------- переход в старт при смене данных/вкладки/ширины ----------
+  // ВИЗУАЛЬНЫЙ индекс (без телепортов): постоянно мапим «бесконечный index» в диапазон реальных слайдов
+  const visualIndex = useMemo(() => {
+    if (total === 0) return 0;
+    // сколько шагов мы сделали относительно «старта»
+    const stepsFromStart = index - startIndex;
+    // приводим к диапазону [0 .. total-1]
+    const inside = ((stepsFromStart % total) + total) % total;
+    // визуальная позиция внутри массива с клонами = perPage + inside
+    return perPage + inside;
+  }, [index, total, perPage, startIndex]);
+
+  // ---------- сброс в стартовую позицию при смене вкладки/ширины/данных ----------
   useEffect(() => {
+    // ставим индекс ровно на старт — без анимации
     setIndex(startIndex);
     if (sliderRef.current) {
       sliderRef.current.style.transition = 'none';
       sliderRef.current.style.transform = `translateX(-${
-        startIndex * (100 / perPage)
+        visualIndex * (100 / perPage)
       }%)`;
       requestAnimationFrame(() => {
         if (sliderRef.current) sliderRef.current.style.transition = '';
       });
     }
-  }, [startIndex, perPage, total, type]);
+  }, [startIndex, perPage, total, type]); // визуально перематываем при изменениях
 
   // ---------- кнопки ----------
   const handleNext = () => {
@@ -125,52 +134,23 @@ export default function Container1() {
     setIndex((prev) => prev - 1);
   };
 
-  // ---------- завершение анимации и «телепорт» на оригинальные позиции ----------
+  // ---------- конец анимации ----------
   const handleTransitionEnd = () => {
+    // просто снимаем флаг — никаких телепортов!
     setIsAnimating(false);
-    if (total === 0) return;
-
-    if (index > maxRealIndex) {
-      const newIndex = index - total; // пролистали вправо за реальные — отматываем на total назад
-      setIndex(newIndex);
-      if (sliderRef.current) {
-        sliderRef.current.style.transition = 'none';
-        sliderRef.current.style.transform = `translateX(-${
-          newIndex * (100 / perPage)
-        }%)`;
-        requestAnimationFrame(() => {
-          if (sliderRef.current) sliderRef.current.style.transition = '';
-        });
-      }
-    } else if (index < perPage) {
-      const newIndex = index + total; // пролистали влево — вперёд на total
-      setIndex(newIndex);
-      if (sliderRef.current) {
-        sliderRef.current.style.transition = 'none';
-        sliderRef.current.style.transform = `translateX(-${
-          newIndex * (100 / perPage)
-        }%)`;
-        requestAnimationFrame(() => {
-          if (sliderRef.current) sliderRef.current.style.transition = '';
-        });
-      }
-    }
   };
 
-  // ---------- применение transform при каждом шаге ----------
+  // ---------- применять transform на каждый шаг ----------
   useEffect(() => {
     if (!sliderRef.current) return;
-    // Если transition пустая строка — зададим дефолт анимацию
-    const hasTransition =
-      sliderRef.current.style.transition &&
-      sliderRef.current.style.transition !== 'none';
-    if (isAnimating && !hasTransition) {
+    // задать анимацию если идёт листание
+    if (isAnimating) {
       sliderRef.current.style.transition = 'transform 0.5s ease-in-out';
     }
     sliderRef.current.style.transform = `translateX(-${
-      index * (100 / perPage)
+      visualIndex * (100 / perPage)
     }%)`;
-  }, [index, perPage, isAnimating]);
+  }, [visualIndex, perPage, isAnimating]);
 
   // ---------- touch ----------
   const touchStartX = useRef(0);
@@ -188,7 +168,7 @@ export default function Container1() {
     setPaused(false);
   };
 
-  // ---------- автопрокрутка (работает и при 1 карточке) ----------
+  // ---------- автопрокрутка ----------
   useEffect(() => {
     if (paused || total === 0) return;
     const id = setInterval(() => {
@@ -199,7 +179,7 @@ export default function Container1() {
 
   // ---------- активная точка для мобилки ----------
   const activeIndex =
-    total > 0 ? (((index - perPage) % total) + total) % total : 0;
+    total > 0 ? (((index - startIndex) % total) + total) % total : 0;
 
   return (
     <div className={classes.container}>
@@ -266,7 +246,7 @@ export default function Container1() {
           onMouseLeave={() => setPaused(false)}
         >
           {total === 0 ? (
-            <div className={classes.empty}>Пока нет матчей в этой вкладке</div>
+            <div className={classes.empty}></div>
           ) : (
             <>
               <div

@@ -12,6 +12,13 @@ const TAB = {
   VIDEO: 'VIDEO',
 };
 
+const TAB_LABEL = {
+  [TAB.PROTOCOL]: 'ПРОТОКОЛ',
+  [TAB.EVENTS]: 'СОБЫТИЯ',
+  [TAB.PHOTO]: 'ФОТО',
+  [TAB.VIDEO]: 'ВИДЕО',
+};
+
 const posRu = {
   GOALKEEPER: 'Вр',
   DEFENDER: 'Зщ',
@@ -68,14 +75,6 @@ function ytId(url = '') {
   }
 }
 
-const PLAYER_POSITIONS = new Set([
-  'GOALKEEPER',
-  'DEFENDER',
-  'MIDFIELDER',
-  'FORWARD',
-]);
-const isPlayerPosition = (p) => (p && PLAYER_POSITIONS.has(p)) || false;
-
 // --- helpers для составов ---
 const startersFromParticipants = (participants, teamId) =>
   (participants || [])
@@ -109,7 +108,7 @@ export default function MatchPage() {
   const [homePlayers, setHomePlayers] = useState([]);
   const [guestPlayers, setGuestPlayers] = useState([]);
   const [lineups, setLineups] = useState(null); // фоллбек на /lineups
-  const [tab, setTab] = useState(TAB.EVENTS);
+  const [tab, setTab] = useState(null); // активная вкладка (или null, если пока ничего нет)
 
   // --------- ГАЛЕРЕЯ -----------
   const [isGalleryOpen, setGalleryOpen] = useState(false);
@@ -278,12 +277,6 @@ export default function MatchPage() {
     return `(${h}:${g})`;
   }, [events, match]);
 
-  const homeImages = match?.homeTeam?.images?.[0]
-    ? `${uploadsConfig}${match.homeTeam.images[0]}`
-    : null;
-  const guestImages = match?.guestTeam?.images?.[0]
-    ? `${uploadsConfig}${match.guestTeam.images[0]}`
-    : null;
   const homeLogo = match?.homeTeam?.logo?.[0]
     ? `${uploadsConfig}${match.homeTeam.logo[0]}`
     : null;
@@ -377,6 +370,32 @@ export default function MatchPage() {
     );
   };
 
+  // ----- наличие контента для вкладок -----
+  const hasProtocol =
+    homeStarters.length + guestStarters.length > 0 ||
+    (Array.isArray(match?.matchReferees) && match.matchReferees.length > 0);
+  const hasEvents = half1.length + half2.length + pens.length > 0;
+  const hasPhoto = images.length > 0;
+  const hasVideo = videos.length > 0;
+
+  const availableTabs = useMemo(() => {
+    const arr = [];
+    if (hasProtocol) arr.push(TAB.PROTOCOL);
+    if (hasEvents) arr.push(TAB.EVENTS);
+    if (hasPhoto) arr.push(TAB.PHOTO);
+    if (hasVideo) arr.push(TAB.VIDEO);
+    return arr;
+  }, [hasProtocol, hasEvents, hasPhoto, hasVideo]);
+
+  // если активная вкладка недоступна — переключить на первую доступную
+  useEffect(() => {
+    if (!loading) {
+      if (!availableTabs.includes(tab)) {
+        setTab(availableTabs[0] ?? null);
+      }
+    }
+  }, [availableTabs, tab, loading]);
+
   if (loading) return <div className={classes.pageWrap}>Загрузка…</div>;
   if (err) return <div className={classes.pageWrap}>{err}</div>;
   if (!match) return <div className={classes.pageWrap}>Матч не найден</div>;
@@ -398,11 +417,6 @@ export default function MatchPage() {
 
             <div className={classes.scoreRow}>
               <div className={classes.teamBox}>
-                {/* <img
-                  src={homeImages}
-                  alt={match?.homeTeam?.title}
-                  className={classes.img}
-                /> */}
                 <div className={classes.teamBoxBottom}>
                   {homeLogo ? (
                     <img src={homeLogo} alt={match?.homeTeam?.title} />
@@ -428,11 +442,6 @@ export default function MatchPage() {
               </div>
 
               <div className={classes.teamBox}>
-                {/* <img
-                  src={guestImages}
-                  alt={match?.guestTeam?.title}
-                  className={classes.img}
-                /> */}
                 <div className={classes.teamBoxBottom}>
                   {guestLogo ? (
                     <img src={guestLogo} alt={match?.guestTeam?.title} />
@@ -449,272 +458,211 @@ export default function MatchPage() {
         </div>
 
         {/* TABS */}
-        <div className={classes.tabs}>
-          <button
-            onClick={() => setTab(TAB.PROTOCOL)}
-            className={`${classes.tabBtn} ${
-              tab === TAB.PROTOCOL ? classes.tabActive : ''
-            }`}
-          >
-            ПРОТОКОЛ
-          </button>
-          <button
-            onClick={() => setTab(TAB.EVENTS)}
-            className={`${classes.tabBtn} ${
-              tab === TAB.EVENTS ? classes.tabActive : ''
-            }`}
-          >
-            СОБЫТИЯ
-          </button>
-          <button
-            onClick={() => setTab(TAB.PHOTO)}
-            className={`${classes.tabBtn} ${
-              tab === TAB.PHOTO ? classes.tabActive : ''
-            }`}
-          >
-            ФОТО
-          </button>
-          <button
-            onClick={() => setTab(TAB.VIDEO)}
-            className={`${classes.tabBtn} ${
-              tab === TAB.VIDEO ? classes.tabActive : ''
-            }`}
-          >
-            ВИДЕО
-          </button>
-        </div>
+        {availableTabs.length > 0 && (
+          <div className={classes.tabs}>
+            {availableTabs.map((t) => (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={`${classes.tabBtn} ${
+                  tab === t ? classes.tabActive : ''
+                }`}
+              >
+                {TAB_LABEL[t]}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* CONTENT */}
-        {tab === TAB.PROTOCOL && (
-          <>
-            {/* <div className={classes.protoActions}>
-              <button
-                className={classes.downloadBtn}
-                onClick={() => window.print()}
-              >
-                Скачать протокол (PDF)
-              </button>
-            </div> */}
-            <div className={classes.protocolCard}>
-              <div className={classes.protocolHeader}>
-                <div className={classes.protoTitle}>СТАРТОВЫЕ СОСТАВЫ</div>
-              </div>
-
-              <div className={classes.protocolGrid}>
-                <div className={classes.col}>
-                  <div className={classes.colHead}>
-                    {homeLogo ? (
-                      <img src={homeLogo} alt="" />
-                    ) : (
-                      <div className={classes.logoStub}>H</div>
-                    )}
-                    <span className={classes.colTitle}>
-                      {match?.homeTeam?.title}
-                    </span>
-                  </div>
-
-                  {homeStarters.length > 0 ? (
-                    homeStarters.map((p) => (
-                      <div key={p.id} className={classes.playerRow}>
-                        <span className={classes.shirt}>{p.number ?? '-'}</span>
-                        <span className={classes.pname}>
-                          {p.name} {p.isCaptain ? ' (C)' : ''}
-                        </span>
-                        <span className={classes.ppos}>
-                          {posRu[p.position] || p.position || '—'}
-                        </span>
-                      </div>
-                    ))
-                  ) : (
-                    <div className={classes.empty}>Нет данных по составу</div>
-                  )}
-                </div>
-
-                <div className={classes.col}>
-                  <div className={classes.colHead}>
-                    {guestLogo ? (
-                      <img src={guestLogo} alt="" />
-                    ) : (
-                      <div className={classes.logoStub}>G</div>
-                    )}
-                    <span className={classes.colTitle}>
-                      {match?.guestTeam?.title}
-                    </span>
-                  </div>
-
-                  {guestStarters.length > 0 ? (
-                    guestStarters.map((p) => (
-                      <div key={p.id} className={classes.playerRow}>
-                        <span className={classes.shirt}>{p.number ?? '-'}</span>
-                        <span className={classes.pname}>
-                          {p.name} {p.isCaptain ? ' (C)' : ''}
-                        </span>
-                        <span className={classes.ppos}>
-                          {posRu[p.position] || p.position || '—'}
-                        </span>
-                      </div>
-                    ))
-                  ) : (
-                    <div className={classes.empty}>Нет данных по составу</div>
-                  )}
-                </div>
-              </div>
-
-              {/* ---- REFEREES ---- */}
-              {Array.isArray(match.matchReferees) &&
-                match.matchReferees.length > 0 && (
-                  <div className={classes.refereesBlock}>
-                    <div className={classes.protoTitle}>СУДЕЙСКАЯ БРИГАДА</div>
-
-                    {/* рисуем список как у состава */}
-                    <div className={classes.refListLikeSquad}>
-                      {match.matchReferees.map((mr) => (
-                        <div key={mr.id} className={classes.playerRow1}>
-                          {/* в “номер” ставим тире — можно заменить на №, свисток и т.п. */}
-                          <span className={classes.shirt}>—</span>
-                          <span className={classes.pname}>
-                            {mr.referee?.name || '—'}
-                          </span>
-                          <span className={classes.ppos}>
-                            {roleRu[mr.role] || mr.role}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+        {tab === TAB.PROTOCOL && hasProtocol && (
+          <div className={classes.protocolCard}>
+            <div className={classes.protocolHeader}>
+              <div className={classes.protoTitle}>СТАРТОВЫЕ СОСТАВЫ</div>
             </div>
-          </>
-        )}
 
-        {tab === TAB.EVENTS && (
-          <div className={classes.eventsCard}>
-            {!events.length ? (
-              <div className={classes.empty}>Событий нет</div>
-            ) : (
-              <>
-                {!!half1.length && (
-                  <div className={classes.halfBlock}>
-                    <div className={classes.halfTitle}>ПЕРВЫЙ ТАЙМ</div>
-                    <div className={classes.timeline}>
-                      {half1.map(renderEventRow)}
-                    </div>
-                  </div>
-                )}
+            <div className={classes.protocolGrid}>
+              <div className={classes.col}>
+                <div className={classes.colHead}>
+                  <span className={classes.colTitle}>
+                    {match?.homeTeam?.title}
+                  </span>
+                </div>
 
-                {!!half2.length && (
-                  <div className={classes.halfBlock}>
-                    <div className={classes.halfTitle}>ВТОРОЙ ТАЙМ</div>
-                    <div className={classes.timeline}>
-                      {half2.map(renderEventRow)}
+                {homeStarters.length > 0 &&
+                  homeStarters.map((p) => (
+                    <div key={p.id} className={classes.playerRow}>
+                      <span className={classes.shirt}>{p.number ?? '-'}</span>
+                      <span className={classes.pname}>
+                        {p.name} {p.isCaptain ? ' (C)' : ''}
+                      </span>
+                      <span className={classes.ppos}>
+                        {posRu[p.position] || p.position || '—'}
+                      </span>
                     </div>
-                  </div>
-                )}
+                  ))}
+              </div>
 
-                {!!pens.length && (
-                  <div className={classes.halfBlock}>
-                    <div className={classes.halfTitle}>ПЕНАЛЬТИ</div>
-                    <div className={classes.timeline}>
-                      {pens.map((e) => {
-                        const side = sideOf(e.teamId);
-                        const icon = iconByType(e.type);
-                        const who =
-                          e?.player?.name ||
-                          (e.playerId ? `Игрок #${e.playerId}` : '—');
-                        const text =
-                          e.type === 'PENALTY_SCORED'
-                            ? `${who} — пенальти (забил)`
-                            : `${who} — пенальти (не забил)`;
-                        return (
-                          <div
-                            key={`pen-${e.id}`}
-                            className={`${classes.eventRow} ${classes.penRow} ${
-                              side === 'home' ? classes.left : classes.right
-                            }`}
-                          >
-                            {side === 'home' ? (
-                              <>
-                                <div className={classes.evText}>{text}</div>
-                                <img
-                                  className={classes.evIcon}
-                                  src={icon}
-                                  alt={e.type}
-                                />
-                                <div className={classes.evMinute}></div>
-                              </>
-                            ) : (
-                              <>
-                                <div className={classes.evMinute}></div>
-                                <img
-                                  className={classes.evIcon}
-                                  src={icon}
-                                  alt={e.type}
-                                />
-                                <div className={classes.evText}>{text}</div>
-                              </>
-                            )}
-                          </div>
-                        );
-                      })}
+              <div className={classes.col}>
+                <div className={classes.colHead}>
+                  <span className={classes.colTitle}>
+                    {match?.guestTeam?.title}
+                  </span>
+                </div>
+
+                {guestStarters.length > 0 &&
+                  guestStarters.map((p) => (
+                    <div key={p.id} className={classes.playerRow}>
+                      <span className={classes.shirt}>{p.number ?? '-'}</span>
+                      <span className={classes.pname}>
+                        {p.name} {p.isCaptain ? ' (C)' : ''}
+                      </span>
+                      <span className={classes.ppos}>
+                        {posRu[p.position] || p.position || '—'}
+                      </span>
                     </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* ---- REFEREES ---- */}
+            {Array.isArray(match.matchReferees) &&
+              match.matchReferees.length > 0 && (
+                <div className={classes.refereesBlock}>
+                  <div className={classes.protoTitle}>СУДЕЙСКАЯ БРИГАДА</div>
+
+                  <div className={classes.refListLikeSquad}>
+                    {match.matchReferees.map((mr) => (
+                      <div key={mr.id} className={classes.playerRow1}>
+                        <span className={classes.shirt}>—</span>
+                        <span className={classes.pname}>
+                          {mr.referee?.name || '—'}
+                        </span>
+                        <span className={classes.ppos}>
+                          {roleRu[mr.role] || mr.role}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </>
-            )}
+                </div>
+              )}
           </div>
         )}
 
-        {tab === TAB.PHOTO && (
-          <div className={classes.photosCard}>
-            {images.length === 0 ? (
-              <div className={classes.empty}>Фотографий нет</div>
-            ) : (
-              <div className={classes.photosGrid}>
-                {images.map((src, i) => (
-                  <img
-                    key={i}
-                    src={`${uploadsConfig}${src}`}
-                    alt={`Фото #${i + 1}`}
-                    loading="lazy"
-                    onError={(e) => (e.currentTarget.style.display = 'none')}
-                    onClick={() => openGallery(i)}
-                    className={classes.photoThumb}
-                  />
-                ))}
+        {tab === TAB.EVENTS && hasEvents && (
+          <div className={classes.eventsCard}>
+            {!!half1.length && (
+              <div className={classes.halfBlock}>
+                <div className={classes.halfTitle}>ПЕРВЫЙ ТАЙМ</div>
+                <div className={classes.timeline}>
+                  {half1.map(renderEventRow)}
+                </div>
               </div>
             )}
-          </div>
-        )}
 
-        {tab === TAB.VIDEO && (
-          <div className={classes.videosCard}>
-            {videos.length === 0 ? (
-              <div className={classes.empty}>Видео нет</div>
-            ) : (
-              <div className={classes.videosList}>
-                {videos.map((v, i) => {
-                  const id = ytId(v);
-                  if (id) {
+            {!!half2.length && (
+              <div className={classes.halfBlock}>
+                <div className={classes.halfTitle}>ВТОРОЙ ТАЙМ</div>
+                <div className={classes.timeline}>
+                  {half2.map(renderEventRow)}
+                </div>
+              </div>
+            )}
+
+            {!!pens.length && (
+              <div className={classes.halfBlock}>
+                <div className={classes.halfTitle}>ПЕНАЛЬТИ</div>
+                <div className={classes.timeline}>
+                  {pens.map((e) => {
+                    const side = sideOf(e.teamId);
+                    const icon = iconByType(e.type);
+                    const who =
+                      e?.player?.name ||
+                      (e.playerId ? `Игрок #${e.playerId}` : '—');
+                    const text =
+                      e.type === 'PENALTY_SCORED'
+                        ? `${who} — пенальти (забил)`
+                        : `${who} — пенальти (не забил)`;
                     return (
-                      <div key={i} className={classes.videoBox}>
-                        <iframe
-                          src={`https://www.youtube.com/embed/${id}`}
-                          title={`video-${i}`}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
+                      <div
+                        key={`pen-${e.id}`}
+                        className={`${classes.eventRow} ${classes.penRow} ${
+                          side === 'home' ? classes.left : classes.right
+                        }`}
+                      >
+                        {side === 'home' ? (
+                          <>
+                            <div className={classes.evText}>{text}</div>
+                            <img
+                              className={classes.evIcon}
+                              src={icon}
+                              alt={e.type}
+                            />
+                            <div className={classes.evMinute}></div>
+                          </>
+                        ) : (
+                          <>
+                            <div className={classes.evMinute}></div>
+                            <img
+                              className={classes.evIcon}
+                              src={icon}
+                              alt={e.type}
+                            />
+                            <div className={classes.evText}>{text}</div>
+                          </>
+                        )}
                       </div>
                     );
-                  }
-                  const src = v.startsWith('http') ? v : `${uploadsConfig}${v}`;
-                  return (
-                    <div key={i} className={classes.videoBox}>
-                      <video src={src} controls />
-                    </div>
-                  );
-                })}
+                  })}
+                </div>
               </div>
             )}
+          </div>
+        )}
+
+        {tab === TAB.PHOTO && hasPhoto && (
+          <div className={classes.photosCard}>
+            <div className={classes.photosGrid}>
+              {images.map((src, i) => (
+                <img
+                  key={i}
+                  src={`${uploadsConfig}${src}`}
+                  alt={`Фото #${i + 1}`}
+                  loading="lazy"
+                  onError={(e) => (e.currentTarget.style.display = 'none')}
+                  onClick={() => openGallery(i)}
+                  className={classes.photoThumb}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {tab === TAB.VIDEO && hasVideo && (
+          <div className={classes.videosCard}>
+            <div className={classes.videosList}>
+              {videos.map((v, i) => {
+                const id = ytId(v);
+                if (id) {
+                  return (
+                    <div key={i} className={classes.videoBox}>
+                      <iframe
+                        src={`https://www.youtube.com/embed/${id}`}
+                        title={`video-${i}`}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                  );
+                }
+                const src = v.startsWith('http') ? v : `${uploadsConfig}${v}`;
+                return (
+                  <div key={i} className={classes.videoBox}>
+                    <video src={src} controls />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 

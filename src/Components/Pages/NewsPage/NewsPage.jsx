@@ -22,7 +22,7 @@ export default function NewsPage() {
   const [sortOrder, setSortOrder] = useState('new'); // 'new' | 'old'
 
   // pagination — фиксированно 12
-  const perPage = 12;
+  const perPage = 9;
   const [page, setPage] = useState(1); // 1-based
 
   // --- дебаунс поиска

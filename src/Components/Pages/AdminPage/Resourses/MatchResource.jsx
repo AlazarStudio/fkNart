@@ -54,6 +54,21 @@ const refereeRoleChoices = [
   { id: 'AVAR', name: 'AVAR' },
 ];
 
+const toLocalInputValue = (v) => {
+  if (!v) return '';
+  const d = new Date(v); // v в ISO/UTC из API
+  const off = d.getTimezoneOffset(); // минуты
+  const local = new Date(d.getTime() - off * 60000);
+  return local.toISOString().slice(0, 16); // 'YYYY-MM-DDTHH:mm'
+};
+
+const fromLocalInputValue = (v) => {
+  if (!v) return null;
+  // v — локальная строка 'YYYY-MM-DDTHH:mm'
+  // делаем Date (как локальное) и отправляем в UTC
+  return new Date(v).toISOString();
+};
+
 export const MatchList = (props) => (
   <List {...props}>
     <Datagrid rowClick="edit">
@@ -153,7 +168,12 @@ const MatchFormFields = () => (
       />
     </ReferenceInput>
 
-    <DateTimeInput source="date" label="Дата" />
+    <DateTimeInput
+      source="date"
+      label="Дата"
+      format={toLocalInputValue}
+      parse={fromLocalInputValue}
+    />
 
     <SelectInput
       source="status"

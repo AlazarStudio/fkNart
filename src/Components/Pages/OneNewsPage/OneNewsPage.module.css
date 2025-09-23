@@ -202,6 +202,8 @@
   cursor: pointer;
 }
 
+
+
 @media (max-width: 768px) {
   .container {
     display: flex;
@@ -366,3 +368,85 @@
   background: #f7f7f7;
   border-radius: 6px;
 }
+
+
+
+/* ==== ВИДЕО ==== */
+.newsVideos {
+  margin-top: 24px;
+}
+
+.newsVideos .title {
+  display: block;
+  margin: 0 0 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* сетка: 1 / 2 / 3 колонки */
+.videosList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .videosList {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 1024px) {
+  .videosList {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.videoBox {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  background: #000; /* чтобы при загрузке не мигал белым */
+}
+
+/* responsive 16:9 контейнер для iframe */
+.ratio16x9 {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 9 / 16 */
+}
+
+.ratio16x9 > iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: inherit;
+  display: block;
+}
+
+/* обычные видеофайлы */
+.videoBox video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;      /* современные браузеры */
+  background: #000;
+  object-fit: contain;        /* чтобы не обрезало кадр */
+  outline: none;
+}
+
+/* фокус/ховер для доступности */
+.videoBox:focus-within {
+  box-shadow: 0 0 0 3px rgba(76, 142, 250, 0.35);
+}
+
+/* если у тебя тёмная тема — можно подсветить границу: */
+/*
+.videoBox {
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+*/

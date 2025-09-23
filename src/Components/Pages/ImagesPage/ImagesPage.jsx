@@ -20,15 +20,21 @@ export default function ImagesPage() {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
+        console.log('Загружаем матчи с сервера...');
         const res = await axios.get(`${serverConfig}/matches`);
+        console.log('Ответ от сервера:', res.data);
+
         const finishedMatches = res.data.filter(
           (match) =>
             match.status === 'FINISHED' &&
             Array.isArray(match.images) &&
             match.images.length > 0
         );
+        console.log('Отфильтрованные матчи:', finishedMatches);
+
         setMatches(finishedMatches);
       } catch (err) {
+        console.error('Ошибка при загрузке матчей:', err);
         setError('Ошибка при загрузке матчей');
       } finally {
         setLoading(false);
@@ -48,8 +54,11 @@ export default function ImagesPage() {
 
   const totalPages = Math.ceil(matches.length / matchesPerPage); // Общее количество страниц
 
+  console.log(`Текущая страница: ${currentPage}, Всего страниц: ${totalPages}`);
+
   // Обработчик клика на номер страницы
   const handlePageClick = (pageNumber) => {
+    console.log(`Переход на страницу: ${pageNumber}`);
     setCurrentPage(pageNumber);
   };
 
@@ -68,6 +77,8 @@ export default function ImagesPage() {
               month: '2-digit',
               year: 'numeric',
             });
+
+            console.log('Матч:', match); // Логируем информацию о каждом матче
 
             return (
               <div

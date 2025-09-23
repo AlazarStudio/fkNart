@@ -435,7 +435,9 @@ export default function ClubPage() {
                     <div className={classes.playerTop}>
                       <div className={classes.playerPos}>
                         <span>{posToRu(p.position)}</span>
-                        <span> {p.number}</span>
+                        {PLAYER_POS.includes(p.position) &&
+                          p.number != null &&
+                          p.number !== '' && <span> {p.number}</span>}
                       </div>
                       <span className={classes.playerName}>{p.name}</span>
                     </div>

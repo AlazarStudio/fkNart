@@ -5,8 +5,29 @@ import serverConfig from '../../../serverConfig';
 import uploadsConfig from '../../../uploadsConfig';
 import classes from './OneNewsPage.module.css';
 
+// --- helpers: извлекаем youtube id и нормализуем ссылку ---
+const toUrl = (v) => (typeof v === 'string' ? v : v?.src || v?.url || '');
+
+const getYoutubeId = (url = '') => {
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./, '');
+    if (host === 'youtu.be') return u.pathname.slice(1);
+    if (host.includes('youtube.com')) {
+      const vParam = u.searchParams.get('v');
+      if (vParam) return vParam;
+      const parts = u.pathname.split('/').filter(Boolean);
+      const i = parts.findIndex((p) => p === 'embed' || p === 'shorts');
+      if (i >= 0) return parts[i + 1] || null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+
 export default function OneNewsPage() {
-  const { id } = useParams(); // получаем id из URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [news, setNews] = useState(null);
@@ -17,7 +38,7 @@ export default function OneNewsPage() {
   const [standings, setStandings] = useState([]);
   const [randomNews, setRandomNews] = useState([]);
 
-  // Запрос данных о новости
+  // загрузка данных
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -36,29 +57,23 @@ export default function OneNewsPage() {
           axios.get(`${serverConfig}/leagues`),
           axios.get(`${serverConfig}/leagueStandings`),
         ]);
-
-        setLeagues(leaguesRes.data);
-        setStandings(standingsRes.data);
-
-        if (leaguesRes.data.length > 0) {
-          setSelectedLeague(leaguesRes.data[0].id); // первая лига по умолчанию
+        setLeagues(leaguesRes.data || []);
+        setStandings(standingsRes.data || []);
+        if ((leaguesRes.data || []).length > 0) {
+          setSelectedLeague(leaguesRes.data[0].id);
         }
       } catch (err) {
-        console.error('Ошибка загрузки лиг или турнирных таблиц:', err);
+        console.error('Ошибка загрузки лиг/таблиц:', err);
       }
     };
 
     const fetchRandomNews = async () => {
       try {
         const response = await axios.get(`${serverConfig}/news`, {
-          params: {
-            _start: 0,
-            _end: 10, // загружаем только первые 10 новостей для случайного выбора
-          },
+          params: { _start: 0, _end: 10 },
         });
-
-        // Рандомно выбираем 3 новости
-        const shuffled = response.data.sort(() => 0.5 - Math.random());
+        const rows = Array.isArray(response.data) ? response.data : [];
+        const shuffled = rows.sort(() => 0.5 - Math.random());
         setRandomNews(shuffled.slice(0, 3));
       } catch (err) {
         console.error('Ошибка при загрузке случайных новостей:', err);
@@ -77,6 +92,9 @@ export default function OneNewsPage() {
   if (loading) return <div>Загрузка...</div>;
   if (error) return <div>{error}</div>;
 
+  // массив видео (может быть строками или объектами {src})
+  const videos = Array.isArray(news?.videos) ? news.videos : [];
+
   return (
     <div className={classes.container}>
       <div className={classes.containerBlock}>
@@ -84,7 +102,9 @@ export default function OneNewsPage() {
           {news ? (
             <>
               <p className={classes.oneNewsDate}>
-                {new Date(news.date).toLocaleDateString('ru-RU')}
+                {news?.date
+                  ? new Date(news.date).toLocaleDateString('ru-RU')
+                  : ''}
               </p>
               <h1 className={classes.oneNewsTitle}>{news.title}</h1>
 
@@ -96,18 +116,56 @@ export default function OneNewsPage() {
                 />
               )}
 
-              {/* вот здесь */}
               <div
                 className={classes.oneNewsDescription}
                 dangerouslySetInnerHTML={{ __html: news.description || '' }}
               />
+
+              {/* ==== ВИДЕО (только если есть) ==== */}
+              {videos.length > 0 && (
+                <div className={classes.newsVideos}>
+                  <h2 className={classes.title}>ВИДЕО</h2>
+                  <div className={classes.videosList}>
+                    {videos.map((raw, i) => {
+                      const v = toUrl(raw);
+                      if (!v) return null;
+
+                      const yt = getYoutubeId(v);
+                      if (yt) {
+                        return (
+                          <div key={i} className={classes.videoBox}>
+                            <div className={classes.ratio16x9}>
+                              <iframe
+                                src={`https://www.youtube.com/embed/${yt}`}
+                                title={`video-${i}`}
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                              />
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      const src = v?.startsWith?.('http')
+                        ? v
+                        : `${uploadsConfig}${v}`;
+                      return (
+                        <div key={i} className={classes.videoBox}>
+                          <video src={src} controls preload="metadata" />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              {/* ==== /ВИДЕО ==== */}
             </>
           ) : (
             <div>Новость не найдена</div>
           )}
         </div>
 
-        {/* Турнирная таблица */}
+        {/* Правый блок — турнирная таблица */}
         <div className={classes.containerBlockRight}>
           <div className={classes.containerBlockRightTop}>
             <div className={classes.standingsHeader}>
@@ -142,11 +200,13 @@ export default function OneNewsPage() {
                 <div key={row.id} className={classes.standingRow}>
                   <span>{idx + 1}</span>
                   <span className={classes.teamName}>
-                    <img
-                      src={`${uploadsConfig}${row.team.logo[0]}`}
-                      alt={row.team.title}
-                    />
-                    {row.team.title}
+                    {row?.team?.logo?.[0] && (
+                      <img
+                        src={`${uploadsConfig}${row.team.logo[0]}`}
+                        alt={row.team.title}
+                      />
+                    )}
+                    {row?.team?.title}
                   </span>
                   <span>{row.played}</span>
                   <span className={classes.points}>{row.points}</span>
@@ -160,8 +220,7 @@ export default function OneNewsPage() {
         </div>
       </div>
 
-      {/* Случайные новости */}
-
+      {/* Похожие новости */}
       <div className={classes.newsBlock}>
         <span className={classes.title}>ПОХОЖИЕ НОВОСТИ</span>
 
@@ -188,6 +247,7 @@ export default function OneNewsPage() {
                   <img
                     src="../images/nartNewsArr.svg"
                     onClick={() => navigate(`/news/${item.id}`)}
+                    alt=""
                   />
                 </span>
               </div>
