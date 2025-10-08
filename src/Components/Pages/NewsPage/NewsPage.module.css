@@ -89,6 +89,7 @@
   width: 100%;
   height: 279px !important;
   object-fit: cover;
+  background-color: rgb(233, 233, 233);
 }
 
 .newsContent {

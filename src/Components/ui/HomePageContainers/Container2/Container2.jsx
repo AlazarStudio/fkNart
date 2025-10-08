@@ -81,13 +81,13 @@ export default function Container2() {
               >
                 <img src={`${uploadsConfig}${news.images[0]}`} alt="home" />
                 <div className={classes.containerBlockLeftNewsCardBottom}>
-                  <span>{news.title}</span>
+                  <span className={classes.title}>{news.title}</span>
                   <div
                     className={classes.cardDesc}
                     dangerouslySetInnerHTML={{ __html: news.description || '' }}
                   />
                   <div className={classes.containerBlockLeftNewsCardBottomDate}>
-                    <span>
+                    <span className={classes.date}>
                       {new Date(news.date).toLocaleDateString('ru-RU')}
                     </span>
                     <span onClick={() => navigate(`/news/${news.id}`)}>

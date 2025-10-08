@@ -160,7 +160,12 @@ export default function NewsPage() {
                   <div className={classes.newsContent}>
                     <h3 className={classes.newsTitle}>{item?.title}</h3>
                     {item?.description && (
-                      <p className={classes.newsDesc}>{item.description}</p>
+                      <div
+                        className={classes.newsDesc}
+                        dangerouslySetInnerHTML={{
+                          __html: item.description || '',
+                        }}
+                      />
                     )}
                     <span className={classes.date}>
                       {item?.date
